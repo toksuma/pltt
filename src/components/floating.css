@@ -1,0 +1,13 @@
+@keyframes wigglePulse {
+  0%, 100% {
+    transform: scale(1) rotate(-5deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+.animate-wiggle-pulse {
+  animation: wigglePulse 1s ease-in-out infinite;
+  display: inline-block;
+}
