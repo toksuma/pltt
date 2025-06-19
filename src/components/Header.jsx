@@ -19,7 +19,7 @@ function Header() {
         {/* Logo */}
         <div className="flex items-center space-x-4 pr-8">
           <img src="/Logo.png" alt="Logo" className="h-10 w-auto" />
-          <span className="text-white text-3xl font-semibold">LandingPage</span>
+          <span className="text-white text-3xl font-semibold">TungPage</span>
         </div>
 
          {/* Menu */}                                 
@@ -44,7 +44,7 @@ function Header() {
         {/* Nút */}
         <div className="hidden md:block pl-4">
           <Link to="/login">
-            <button className="bg-white text-[#fa5b7a] px-5 py-2 rounded-full hover:text-[#d3046c] transition duration-300 transform hover:scale-110">
+            <button className="bg-white text-[#fa5b7a] px-5 py-2 rounded-full hover:text-[#d3046c] transition duration-300 transform hover:scale-105">
               ĐĂNG KÝ
             </button>
           </Link>
