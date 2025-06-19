@@ -5,12 +5,12 @@ const Collab = () => {
     <div className="bg-white py-12 px-6">
       {/* Tiêu đề chính */}
       <h1 className="text-4xl font-bold text-center text-[#d3046c] mb-10">
-        HỢP TÁC THIẾT KẾ LANDING PAGE
+        HỢP TÁC THIẾT KẾ LANDING PAGE  123
       </h1>
 
       {/* Khối nội dung + hình */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        {/* Nội dung văn bản */}
+        /* Nội dung văn bản */
         <div className="text-gray-800 text-lg leading-relaxed">
           <h2>
             Xin chào bạn, Nếu bạn đang như cầu sau thì hãy nhanh tay liên hệ ngay với chúng tôi để hợp tác bạn nhé:
@@ -24,14 +24,12 @@ const Collab = () => {
             Nếu bạn đang có nhu cầu hãy liên hệ ngay để chúng ta cùng trao đổi chi tiết bạn nhé.
           </h2>
 
-           <div className="mt-6 flex justify-center ">
-    <button className=" text-white hover:text-[#d3046c] text-lg font-semibold px-6 py-3 rounded-full shadow bg-[#fd9374] transition duration-300">
-      Hotline/Zalo: 0123456789
-    </button>
-  </div>
-            </div>
-
-        {/* Hình ảnh bên cạnh */}
+          <div className="mt-6 flex justify-center">
+            <button className="inline-block bg-yellow-400 text-black px-6 py-3 rounded-full text-lg font-semibold shadow-md transition duration-300 transform hover:scale-105">
+              Hotline/Zalo: 0123456789
+            </button>
+          </div>
+        </div>
         <div className="flex justify-center">
           <img
             src="/cb.png"  
