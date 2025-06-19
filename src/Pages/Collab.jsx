@@ -24,14 +24,12 @@ const Collab = () => {
             Nếu bạn đang có nhu cầu hãy liên hệ ngay để chúng ta cùng trao đổi chi tiết bạn nhé.
           </h2>
 
-           <div className="mt-6 flex justify-center ">
-    <button className=" text-white hover:text-[#d3046c] text-lg font-semibold px-6 py-3 rounded-full shadow bg-[#fd9374] transition duration-300">
-      Hotline/Zalo: 0123456789
-    </button>
-  </div>
-            </div>
-
-        {/* Hình ảnh bên cạnh */}
+          <div className="mt-6 flex justify-center">
+            <button className="text-white hover:text-[#d3046c] text-lg font-semibold px-6 py-3 rounded-full shadow bg-[#fd9374] transition duration-300 transform hover:scale-105">
+              Hotline/Zalo: 0123456789
+            </button>
+          </div>
+        </div>
         <div className="flex justify-center">
           <img
             src="/cb.png"  
