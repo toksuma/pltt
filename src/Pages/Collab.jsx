@@ -5,7 +5,7 @@ const Collab = () => {
     <div className="bg-white py-12 px-6">
       {/* Tiêu đề chính */}
       <h1 className="text-4xl font-bold text-center text-[#d3046c] mb-10">
-        HỢP TÁC THIẾT KẾ LANDING PAGE
+        HỢP TÁC THIẾT KẾ LANDING PAGE 
       </h1>
 
       {/* Khối nội dung + hình */}
