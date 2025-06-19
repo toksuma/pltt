@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const industries = [
   { name: 'BẤT ĐỘNG SẢN', image: '/bds.png' },
@@ -13,6 +15,10 @@ const industries = [
 ];
 
 const Home = () => {
+  useEffect(() => {
+    AOS.init({ duration: 800, once: true });
+  }, []);
+
   return (
     <div>
 
@@ -48,7 +54,7 @@ const Home = () => {
           DỊCH VỤ LANDING PAGE THEO NGÀNH
         </h1>
 
-        {/* Đường gợn sóng đỏ mỏng, dồn dập */}
+        {/* Đường gợn sóng đỏ */}
         <div className="flex justify-center mt-4 mb-6">
           <svg
             width="640"
@@ -84,19 +90,24 @@ const Home = () => {
           </svg>
         </div>
 
-        {/* Lưới ngành 4 cột × 2 hàng */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 text-2xl gap-8 max-w-7xl mx-auto mt-6">
+        {/* Lưới ngành */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-7xl mx-auto mt-6">
           {industries.map((item, index) => (
-            <div key={index} className="text-center">
-              <h2 className="w-[300px] mx-auto text-3xl font-bold text-red-600 mb-3">
+            <div
+              key={index}
+              className="text-center flex flex-col items-center p-4 bg-white shadow-md rounded-xl hover:shadow-lg transition duration-300"
+              data-aos="fade-up"
+              data-aos-delay={index * 100}
+            >
+              <h2 className="text-xl font-semibold text-red-600 mb-3">
                 {item.name}
               </h2>
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-[300px] h-[200px] object-cover rounded-2xl mx-auto mb-3"
+                className="w-[260px] h-[170px] object-cover rounded-xl mb-4 transition-transform duration-300 hover:scale-105"
               />
-              <button className="mt-4 bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700 transition">
+              <button className="bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition">
                 Xem chi tiết
               </button>
             </div>
