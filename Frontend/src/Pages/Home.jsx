@@ -171,6 +171,62 @@ const Home = () => {
   </div>
 </section>
 
+{/* SECTION: TÍNH NĂNG SẼ CÓ TRÊN LANDING PAGE */}
+<section className="py-12 px-4 bg-white text-center">
+  <h1 className="text-3xl md:text-4xl font-bold text-green-600 mb-10">
+    TÍNH NĂNG SẼ CÓ TRÊN LANDING PAGE
+  </h1>
+
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 max-w-7xl mx-auto text-xl">
+  {[
+    "Cài đặt miễn phí SSL cho Website",
+    "Thông Báo Giá Khách Hàng",
+    "Tích Hợp Các loại Live Chat",
+    "Có Sẵn Phiên Bản Mobile",
+    "Form thu thập thông tin ",
+    "Popup đăng ký",
+    "Lựa Data Khách Hàng",
+    "Tiễn ích MAXLEAD Liên Hệ",
+    "Vòng Quay May Mắn",
+    "Đếm Ngược Thời Gian",
+    "Thống Kê Data Về Mail và CRM",
+    "Tạo Popup Cảm Ơn",
+  ].map((feature, index) => (
+    <button
+      key={index}
+      className="bg-blue-600 text-white px-4 h-20 w-full rounded-full font-medium hover:bg-orange-500 transition duration-300 flex items-center justify-center"
+    >
+      {feature}
+    </button>
+  ))}
+</div>
+</section>
+
+{/* SECTION: TỔNG THỂ VỀ LANDING PAGE */}
+<section className="py-16 px-4 bg-white">
+  <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
+    
+    {/* PHẦN TRÁI: HÌNH NHỎ GỌN */}
+    <div className="w-full md:w-1/2 flex justify-center">
+      <img
+        src="/cb.png" // Đặt hình trong thư mục public
+        alt="Tổng thể Landing Page"
+        className="w-[300px] h-auto rounded-lg"
+      />
+    </div>
+
+    {/* PHẦN PHẢI: NỘI DUNG */}
+    <div className="w-full md:w-1/2 text-center md:text-left">
+      <h1 className="text-3xl md:text-4xl font-bold text-blue-600 mb-4">
+        TỔNG THỂ VỀ LANDING PAGE
+      </h1>
+      <p className="text-lg text-gray-700 text-justify leading-relaxed">
+        CCO MEDIA chuyên cung cấp trọn gói các dịch vụ về Landing Page như: Thiết kế Landing page cho mọi lĩnh vực, tối ưu và chỉnh giao diện Landing page, SEO landing page top GOOGLE.
+      </p>
+    </div>
+  </div>
+</section>
+
 
 
 
