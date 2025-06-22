@@ -7,14 +7,15 @@ import FloatingButtons from './components/AddOn'; // ⬅️ Thêm dòng này
 
 import './components/floating.css';
 
-import Home from './Pages/Home';
-import Interface from './Pages/Interface';
-import Contact from './Pages/Contact';
-import News from './Pages/News';
-import PriceList from './Pages/PriceList';
-import Services from './Pages/Services';
-import Collab from './Pages/Collab';
-import Login from './Pages/Login';
+
+import Home from './Pages/Main/Home';
+import Interface from './Pages/Main/Interface';
+import Contact from './Pages/Main/Contact';
+import News from './Pages/Main/News';
+import PriceList from './Pages/Main/PriceList';
+import Services from './Pages/Main/Services';
+import Collab from './Pages/Main/Collab';
+import Login from './Pages/Main/Login';
 
 function App() {
   return (
