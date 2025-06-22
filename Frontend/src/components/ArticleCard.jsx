@@ -7,7 +7,7 @@ const ArticleCard = ({ article }) => {
       <div className="bg-white shadow-lg rounded-lg overflow-hidden group transition-all duration-300">
         <div className="overflow-hidden h-48">
           <img
-            src={article.image}
+            src={article.image_url}
             alt={article.title}
             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
           />
