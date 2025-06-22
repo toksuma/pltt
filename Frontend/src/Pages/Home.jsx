@@ -2,6 +2,11 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Services from "./Services";
+import Collab from "./Collab";
+import FAQSection from "./Section/FAQSection"; 
+import ClientLogos from "./Section/ClientLogos";
+import Software from "./Section/Software";
 
 const industries = [
   { name: 'BẤT ĐỘNG SẢN', image: '/bds.png' },
@@ -245,6 +250,18 @@ const Home = () => {
           Xem giao diện →
         </Link>
       </section>
+
+ <div className="w-full bg-white">
+      
+      <Services />
+      <Collab />
+      <FAQSection />
+      <ClientLogos />
+      <Software />
+
+    </div>
+
+
     </div>
   );
 };
