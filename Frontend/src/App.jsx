@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingButtons from './components/AddOn'; // ⬅️ Thêm dòng này
-
+import ArticleDetail from "./Pages/Main/ArticleDetail";
 import './components/floating.css';
 
 
@@ -25,7 +25,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Interface" element={<Interface />} />
         <Route path="/Contact" element={<Contact />} />
-        <Route path="/News" element={<News />} />
+      <Route path="/news" element={<News />} />
+        <Route path="/news/:id" element={<ArticleDetail />} />
         <Route path="/PriceList" element={<PriceList />} />
         <Route path="/Service" element={<Services />} />
         <Route path="/Collab" element={<Collab />} />

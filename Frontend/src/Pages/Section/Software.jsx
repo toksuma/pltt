@@ -1,10 +1,10 @@
 import React from "react";
 
 const services = [
-  { image: "email.png", label: "Email Marketing" },
-  { image: "crm.png", label: "CRM Tự động" },
-  { image: "erp.png", label: "Hệ thống ERP" },
-  { image: "chatbot.png", label: "Chatbot AI" },
+  { image: "x1.webp", label: "Email Marketing" },
+  { image: "x2.png", label: "CRM Tự động" },
+  { image: "x3.png", label: "Hệ thống ERP" },
+  { image: "x4.png", label: "Chatbot AI" },
 ];
 
 const Software = () => {
@@ -26,7 +26,7 @@ const Software = () => {
               className="w-[150px] h-[150px] object-contain mb-4"
             />
             <button
-              className="bg-cyan-600 text-white px-4 py-2 rounded-lg text-lg font-semibold transition transform hover:bg-yellow-400 hover:scale-105"
+              className="bg-cyan-600 text-white px-4 py-2 rounded-full text-lg font-semibold transition transform hover:bg-yellow-400 hover:scale-105 px-6"
             >
               {service.label}
             </button>

@@ -18,7 +18,7 @@ const logos = [
 
 const ClientLogos = () => {
   return (
-    <section className="bg-white pt-6 pb-12 px-4 sm:px-10 lg:px-[3cm] w-full">
+    <section className="bg-white pt-6  px-4 sm:px-10 lg:px-[3cm] w-full">
       <h1 className="text-4xl font-bold text-cyan-600 text-center uppercase mb-10">
         KHÁCH HÀNG CỦA CHÚNG TÔI
       </h1>
@@ -44,7 +44,7 @@ const ClientLogos = () => {
               <img
                 src={logo}
                 alt={`logo-${index}`}
-                className="h-16 object-contain"
+                className="h-32 object-contain"
               />
             </div>
           </SwiperSlide>

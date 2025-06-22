@@ -76,10 +76,10 @@ const Footer = () => {
         </div>
       </div>
       <div className="bg-yellow-400 text-base text-gray-900 text-center py-1">
-        © 2025 Bản quyền thuộc về 
+        Bản quyền thuộc về 
         <span><a href="/"  className="text-[#fa4d3e] font-semibold hover:underline "> Tùng Media </a></span> – 
         Sản phẩm của Công ty 
-        <span> <a href="/" className="text-[#fa4d3e] font-semibold"> TNHH Tùng Media</a></span>.
+        <a href="/" className="text-[#fa4d3e] font-semibold hover:underline"> TNHH Tùng Media</a>.
       </div>
     </footer>
   );
