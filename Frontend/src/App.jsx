@@ -21,6 +21,10 @@ import Dashboard from './admin/Dashboard';
 import ContactManager from './admin/ContactManager';
 import BannerManager from './admin/BannerManager';
 
+import Sidebar from './admin/Sidebar';
+import { Ghost } from 'lucide-react';
+
+
 // 👉 Tạo component wrapper để dùng useLocation
 function AppContent() {
   const location = useLocation();
@@ -49,17 +53,26 @@ function AppContent() {
             <Route path="banners" element={<BannerManager />} />
           </Route>
         </Routes>
+
+       
       </main>
 
       {/* Ẩn Footer & nút nổi nếu ở trang admin */}
       {location.pathname !== "/admin/articles" && (
         <>
+         
           <FloatingButtons />
           <Footer />
+          
         </>
+
+
+
+
       )}
     </div>
   );
+  
 }
 
 // Bọc AppContent trong Router
