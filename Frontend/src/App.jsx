@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
 import AdminArticleManager from './admin/AdminArticleManager';  
@@ -17,6 +16,11 @@ import Services from './Pages/Main/Services';
 import Collab from './Pages/Main/Collab';
 import Login from './Pages/Main/Login';
 
+import AdminLayout from './admin/AdminLayout';
+import Dashboard from './admin/Dashboard';
+import ContactManager from './admin/ContactManager';
+import BannerManager from './admin/BannerManager';
+
 // 👉 Tạo component wrapper để dùng useLocation
 function AppContent() {
   const location = useLocation();
@@ -25,7 +29,7 @@ function AppContent() {
     <div className="flex flex-col min-h-screen bg-white">
       <Header />
 
-      <main className="flex-grow min-h-[calc(100vh-250px)]">
+     <main className="flex-grow min-h-[calc(100vh-250px)]">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Interface" element={<Interface />} />
@@ -36,7 +40,14 @@ function AppContent() {
           <Route path="/Service" element={<Services />} />
           <Route path="/Collab" element={<Collab />} />
           <Route path="/Login" element={<Login />} />
-          <Route path="/admin/articles" element={<AdminArticleManager />} />
+
+          {/* ✅ Bọc toàn bộ các trang admin trong AdminLayout */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="articles" element={<AdminArticleManager />} />
+            <Route path="contacts" element={<ContactManager />} />
+            <Route path="banners" element={<BannerManager />} />
+          </Route>
         </Routes>
       </main>
 
