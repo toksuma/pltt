@@ -63,11 +63,8 @@ function AppContent() {
          
           <FloatingButtons />
           <Footer />
-          
+        
         </>
-
-
-
 
       )}
     </div>
