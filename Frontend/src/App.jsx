@@ -58,18 +58,17 @@ function AppContent() {
       </main>
 
       {/* Ẩn Footer & nút nổi nếu ở trang admin */}
-      {location.pathname !== "/admin/articles" && (
-        <>
-         
-          <FloatingButtons />
-          <Footer />
-        
-        </>
-
+      {location.pathname !== "/admin/articles" &&
+        location.pathname !== "/admin/dashboard" &&
+        location.pathname !== "/admin/contacts" &&
+        location.pathname !== "/admin/banners" && (
+          <>
+            <FloatingButtons />
+            <Footer />
+          </>
       )}
     </div>
   );
-  
 }
 
 // Bọc AppContent trong Router

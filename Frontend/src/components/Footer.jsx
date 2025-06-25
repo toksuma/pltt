@@ -12,7 +12,7 @@ const Footer = () => {
       >
         <h1 className="text-4xl md:text-5xl font-bold mb-4 ">TƯ VẤN MIỄN PHÍ</h1>
         <h2 className="text-lg md:text-xl mb-6 max-w-5xl mx-auto">
-          Bạn cần sự hỗ trợ hoặc tư vấn thêm về thông tin sản phẩm dịch vụ hãy liên hệ ngay với ao
+          Bạn cần sự hỗ trợ hoặc tư vấn thêm về thông tin sản phẩm dịch vụ hãy liên hệ ngay với 
           <span className="font-semibold text-[#003366]"> TÙNG MEDIA</span>
                    </h2>
         <div className="inline-block bg-yellow-400 text-black px-6 py-3 rounded-full text-lg font-semibold shadow-md transition duration-300 transform hover:scale-105">
