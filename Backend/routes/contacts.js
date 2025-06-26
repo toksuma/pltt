@@ -6,7 +6,7 @@ router.get("/", (req, res) => {
   const sql = "SELECT * FROM contacts ORDER BY created_at DESC";
   db.query(sql, (err, result) => {
     if (err) {
-      console.error("❌ Lỗi khi truy vấn contacts:", err);
+      console.error("Lỗi truy vấn contacts:", err);
       return res.status(500).json({ error: "Lỗi server" });
     }
     res.json(result);

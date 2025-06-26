@@ -52,7 +52,7 @@ const Login = () => {
       </div>
 
       {/* Right - Background Image */}
-      <div className="hidden md:block md:w-1/2 bg-cover bg-center" style={{ backgroundImage: `url('https://source.unsplash.com/800x800/?technology,website')` }}></div>
+      <div className="hidden md:block md:w-1/2 bg-cover bg-center" style={{ backgroundImage: `url('./logo.png')` }}></div>
     </div>
   );
 };

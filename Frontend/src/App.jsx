@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
 import AdminArticleManager from './admin/AdminArticleManager';  
+import AdminBannerManager from './admin/AdminBannerManager';  
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingButtons from './components/AddOn';
@@ -19,21 +20,26 @@ import Login from './Pages/Main/Login';
 import AdminLayout from './admin/AdminLayout';
 import Dashboard from './admin/Dashboard';
 import ContactManager from './admin/ContactManager';
-import BannerManager from './admin/BannerManager';
+import BannerPopup from './components/BannerPopup';
 
 import Sidebar from './admin/Sidebar';
 import { Ghost } from 'lucide-react';
-
+<BannerPopup />
 
 // 👉 Tạo component wrapper để dùng useLocation
 function AppContent() {
   const location = useLocation();
 
+  const isAdminPage = location.pathname.startsWith("/admin");
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <Header />
 
-     <main className="flex-grow min-h-[calc(100vh-250px)]">
+      {/* ✅ Hiển thị BannerPopup nếu không phải trang admin */}
+      {!isAdminPage && <BannerPopup />}
+
+      <main className="flex-grow min-h-[calc(100vh-250px)]">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Interface" element={<Interface />} />
@@ -45,31 +51,26 @@ function AppContent() {
           <Route path="/Collab" element={<Collab />} />
           <Route path="/Login" element={<Login />} />
 
-          {/* ✅ Bọc toàn bộ các trang admin trong AdminLayout */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="articles" element={<AdminArticleManager />} />
             <Route path="contacts" element={<ContactManager />} />
-            <Route path="banners" element={<BannerManager />} />
+            <Route path="banners" element={<AdminBannerManager />} />
           </Route>
         </Routes>
-
-       
       </main>
 
-      {/* Ẩn Footer & nút nổi nếu ở trang admin */}
-      {location.pathname !== "/admin/articles" &&
-        location.pathname !== "/admin/dashboard" &&
-        location.pathname !== "/admin/contacts" &&
-        location.pathname !== "/admin/banners" && (
-          <>
-            <FloatingButtons />
-            <Footer />
-          </>
+      {!isAdminPage && (
+        <>
+        <BannerPopup />
+          <FloatingButtons />
+          <Footer />
+        </>
       )}
     </div>
   );
 }
+
 
 // Bọc AppContent trong Router
 function App() {

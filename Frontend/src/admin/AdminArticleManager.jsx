@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+axios.get("http://localhost:5000/api/articles")
 
 const AdminArticleManager = () => {
   const [articles, setArticles] = useState([]);
@@ -15,6 +16,7 @@ const AdminArticleManager = () => {
     author: "",
     additional_images: [{ url: "", caption: "" }],
   });
+  
 
   const fetchArticles = async () => {
     try {

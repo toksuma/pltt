@@ -2,24 +2,31 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
+// ✅ API: Thống kê tổng số bài viết và liên hệ
 router.get("/", (req, res) => {
-  const stats = {};
+  const statsQuery = `
+    SELECT 
+      (SELECT COUNT(*) FROM articles) AS total_articles,
+      (SELECT COUNT(*) FROM contacts) AS total_contacts
+  `;
+  db.query(statsQuery, (err, result) => {
+    if (err) {
+      console.error("❌ Lỗi truy vấn dashboard stats:", err);
+      return res.status(500).json({ error: "Lỗi server" });
+    }
+    res.json(result[0]);
+  });
+});
 
-  db.query("SELECT COUNT(*) AS count FROM articles", (err, result1) => {
-    if (err) return res.status(500).json({ error: "Lỗi truy vấn bài viết" });
-    stats.articles = result1[0].count;
-
-    db.query("SELECT COUNT(*) AS count FROM contacts", (err, result2) => {
-      if (err) return res.status(500).json({ error: "Lỗi truy vấn liên hệ" });
-      stats.contacts = result2[0].count;
-
-      db.query("SELECT COUNT(*) AS count FROM admins", (err, result3) => {
-        if (err) return res.status(500).json({ error: "Lỗi truy vấn admin" });
-        stats.admins = result3[0].count;
-
-        res.json(stats);
-      });
-    });
+// ✅ API: Lấy 5 log hoạt động mới nhất
+router.get("/recent", (req, res) => {
+  const sql = "SELECT * FROM activity_logs ORDER BY created_at DESC LIMIT 5";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("❌ Lỗi truy vấn activity_logs:", err);
+      return res.status(500).json({ error: "Lỗi server" });
+    }
+    res.json(result);
   });
 });
 

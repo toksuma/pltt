@@ -1,7 +1,13 @@
-// routes/articles.js
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const { authenticate, authorize } = require("../middleware/auth"); // ⬅️ IMPORT CÓ ../
+
+
+router.get("/admin-list", authenticate, authorize("admin"), (req, res) => {
+  res.json({ message: "Danh sách chỉ admin được xem" });
+});
+
 
 // 🔍 Lấy tất cả bài viết
 router.get("/", (req, res) => {
@@ -34,8 +40,6 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
   const { title, content, description, image_url, author, additional_images } = req.body;
 
-  console.log("📥 Nhận được:", req.body);
-
   const sql = `
     INSERT INTO articles (title, content, description, image_url, author, additional_images)
     VALUES (?, ?, ?, ?, ?, ?)
@@ -46,6 +50,11 @@ router.post("/", (req, res) => {
       console.error("❌ Lỗi khi thêm bài viết:", err);
       return res.status(500).json({ error: "Lỗi thêm bài viết" });
     }
+
+    // ➕ Ghi log hoạt động
+    const logSql = `INSERT INTO activity_logs (action_type, title, user) VALUES ('article_add', ?, ?)`;
+    db.query(logSql, [title, author], () => {});
+
     res.status(201).json({ message: "✅ Thêm bài viết thành công", id: result.insertId });
   });
 });
@@ -66,20 +75,46 @@ router.put("/:id", (req, res) => {
       console.error("❌ Lỗi khi cập nhật bài viết:", err);
       return res.status(500).json({ error: "Lỗi cập nhật bài viết" });
     }
+
+    // ✏️ Ghi log hoạt động
+    const logSql = `INSERT INTO activity_logs (action_type, title, user) VALUES ('article_edit', ?, ?)`;
+    db.query(logSql, [title, author], () => {});
+
     res.json({ message: "✅ Cập nhật bài viết thành công" });
   });
 });
 
 // 🗑️ Xoá bài viết
 router.delete("/:id", (req, res) => {
-  const sql = "DELETE FROM articles WHERE id = ?";
-  db.query(sql, [req.params.id], (err, result) => {
+  const { id } = req.params;
+
+  const deleteQuery = "DELETE FROM articles WHERE id = ?";
+  db.query(deleteQuery, [id], (err, result) => {
     if (err) {
       console.error("❌ Lỗi khi xoá bài viết:", err);
-      return res.status(500).json({ error: "Lỗi xoá bài viết" });
+      return res.status(500).json({ error: "Lỗi server khi xoá bài viết" });
     }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Không tìm thấy bài viết để xoá" });
+    }
+
+    // ✅ Ghi log nếu cần
+    const log = {
+      action_type: "xoá",
+      title: `ID ${id}`,
+      user: "admin", // thay bằng tài khoản đăng nhập nếu có
+      target: "articles",
+      target_id: id,
+    };
+
+    db.query("INSERT INTO activity_logs SET ?", log, (logErr) => {
+      if (logErr) console.warn("⚠️ Không thể ghi log xoá:", logErr);
+    });
+
     res.json({ message: "✅ Xoá bài viết thành công" });
   });
 });
+
 
 module.exports = router;
