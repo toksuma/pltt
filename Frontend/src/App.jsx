@@ -24,7 +24,6 @@ import BannerPopup from './components/BannerPopup';
 
 import Sidebar from './admin/Sidebar';
 import { Ghost } from 'lucide-react';
-<BannerPopup />
 
 // 👉 Tạo component wrapper để dùng useLocation
 function AppContent() {
