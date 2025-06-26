@@ -198,7 +198,7 @@ const AdminArticleManager = () => {
               className="border w-full p-2 mb-3 h-32"
             />
 
-            <h3 className="font-semibold mb-2">Hình phụ và mô tả:</h3>
+            <h3 className="font-semibold mb-2">Bai và mô tả:</h3>
             {formData.additional_images.map((img, index) => (
               <div key={index} className="mb-2 flex gap-2 items-center">
                 <input

@@ -1,9 +1,31 @@
 import React from "react";
 
 const TemplatePage = () => {
-  const templates = Array.from({ length: 20 }, (_, i) => ({
+  const templates = [
+    "https://bds.dichvulandingpage.com/bds20",
+    "https://bds.dichvulandingpage.com/bds21",
+    "https://bds.dichvulandingpage.com/bds22",
+    "https://bds.dichvulandingpage.com/bds23",
+    "https://bds.dichvulandingpage.com/bds24",
+    "https://bds.dichvulandingpage.com/bds25",
+    "https://bds.dichvulandingpage.com/bds26",
+    "https://bds.dichvulandingpage.com/bds27",
+    "https://bds.dichvulandingpage.com/bds28",
+    "https://bds.dichvulandingpage.com/bds29",
+    "https://bds.dichvulandingpage.com/bds30",
+    "https://bds.dichvulandingpage.com/bds31",
+    "https://bds.dichvulandingpage.com/bds32",
+    "https://bds.dichvulandingpage.com/bds33",
+    "https://bds.dichvulandingpage.com/bds34",
+    "https://bds.dichvulandingpage.com/bds35",
+    "https://bds.dichvulandingpage.com/bds36",
+    "https://bds.dichvulandingpage.com/bds37",
+    "https://bds.dichvulandingpage.com/bds38",
+    "https://bds.dichvulandingpage.com/bds39",
+  ].map((link, i) => ({
     label: `GIAO DIỆN ${i + 1}`,
     code: `MÃ LDP${(i + 1).toString().padStart(2, "0")}`,
+    link,
   }));
 
   return (
@@ -15,20 +37,34 @@ const TemplatePage = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 mb-12">
         {templates.map((template, index) => (
           <div key={index} className="flex flex-col items-center">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-full text-2xl font-semibold w-full hover:bg-yellow-600 transition">
-              {template.label}
-            </button>
-            <p className="text-gray-700 mt-2 text-xl  font-bold text-center">
+            <a
+              href={template.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full"
+            >
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-full text-2xl font-semibold w-full hover:bg-yellow-600 transition">
+                {template.label}
+              </button>
+            </a>
+            <p className="text-gray-700 mt-2 text-xl font-bold text-center">
               {template.code}
             </p>
           </div>
         ))}
       </div>
 
+      {/* Nút xem thêm */}
       <div className="flex justify-center mb-10">
-        <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full text-lg font-bold shadow-md transition">
-          XEM THÊM ĐẦY ĐỦ GIAO DIỆN
-        </button>
+        <a
+          href="https://docs.google.com/spreadsheets/d/1YPEwZ4CnLVJkRPSG1-f1mwiysZf54VfQnP6B7ED0VME/edit?pli=1&gid=0#gid=0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full text-lg font-bold shadow-md transition">
+            XEM THÊM ĐẦY ĐỦ GIAO DIỆN
+          </button>
+        </a>
       </div>
 
       <h2 className="text-justify text-lg text-gray-800 leading-relaxed">
