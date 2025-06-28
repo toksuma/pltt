@@ -1,7 +1,6 @@
-import express from "express";
-import db from "../db.js";
-
+const express = require("express"); // ✅ Dùng require
 const router = express.Router();
+const db = require("../db");        // ✅ Cũng dùng require
 
 // Lấy tất cả banner
 router.get("/", (req, res) => {
@@ -64,4 +63,4 @@ router.put("/:id/activate", (req, res) => {
   });
 });
 
-export default router;
+module.exports = router; // ✅ Chuẩn CommonJS
