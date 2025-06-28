@@ -7,7 +7,7 @@ const News = () => {
   const [articles, setArticles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 🔁 Gọi API khi trang vừa mở
+  //  lấy database articles
   useEffect(() => {
     fetch("http://localhost:5000/api/articles")
       .then((res) => res.json())
@@ -15,7 +15,7 @@ const News = () => {
       .catch((err) => console.error("Lỗi khi lấy dữ liệu:", err));
   }, []);
 
-  // 🔎 Lọc bài viết theo ô tìm kiếm
+  // Sreach
   const filteredArticles = articles.filter((article) =>
     article.title.toLowerCase().includes(searchTerm.toLowerCase())
   );

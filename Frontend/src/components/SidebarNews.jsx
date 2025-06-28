@@ -1,10 +1,7 @@
-import React from "react";
-
 const SidebarNews = ({ articles }) => {
   const latestArticles = [...articles]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 5);
-
   return (
     <div className="bg-gray-100 p-4 rounded-lg">
       <h3 className="text-xl font-semibold mb-4 text-blue-700">Bài viết mới</h3>

@@ -25,7 +25,7 @@ import BannerPopup from './components/BannerPopup';
 import Sidebar from './admin/Sidebar';
 import { Ghost } from 'lucide-react';
 
-// 👉 Tạo component wrapper để dùng useLocation
+//  useLocation
 function AppContent() {
   const location = useLocation();
 
@@ -35,8 +35,8 @@ function AppContent() {
     <div className="flex flex-col min-h-screen bg-white">
       <Header />
 
-      {/* ✅ Hiển thị BannerPopup nếu không phải trang admin */}
-      {!isAdminPage && <BannerPopup />}
+      {/* */}
+      {!isAdminPage && <BannerPopup />} {/* Hiển thị Banner*/}
 
       <main className="flex-grow min-h-[calc(100vh-250px)]">
         <Routes>
@@ -58,8 +58,8 @@ function AppContent() {
           </Route>
         </Routes>
       </main>
-
-      {!isAdminPage && (
+{/* Tắt các addon và footer để hạn chế lỗi*/}
+      {!isAdminPage && ( 
         <>
         <BannerPopup />
           <FloatingButtons />
@@ -70,8 +70,6 @@ function AppContent() {
   );
 }
 
-
-// Bọc AppContent trong Router
 function App() {
   return (
     <Router>

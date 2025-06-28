@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-// ✅ Route lấy toàn bộ liên hệ
 router.get("/", (req, res) => {
   const sql = "SELECT * FROM contacts ORDER BY created_at DESC";
   db.query(sql, (err, result) => {
@@ -13,8 +12,6 @@ router.get("/", (req, res) => {
     res.json(result);
   });
 });
-
-// ✅ Route thêm mới liên hệ
 router.post("/", (req, res) => {
   const { name, phone, email, occupation, address, landing_code, message } = req.body;
 
@@ -25,10 +22,10 @@ router.post("/", (req, res) => {
 
   db.query(sql, [name, phone, email, occupation, address, landing_code, message], (err, result) => {
     if (err) {
-      console.error("❌ Lỗi thêm liên hệ:", err);
+      console.error("Lỗi thêm liên hệ:", err);
       return res.status(500).json({ error: "Lỗi server khi lưu liên hệ." });
     }
-    res.json({ message: "✅ Gửi liên hệ thành công!" });
+    res.json({ message: " ửi liên hệ thành công!" });
   });
 });
 

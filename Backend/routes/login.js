@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const secret = "your_jwt_secret"; // để ở .env
+const secret = "your_jwt_secret"; 
 
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;

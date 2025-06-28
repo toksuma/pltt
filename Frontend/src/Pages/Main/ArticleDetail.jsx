@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
+// Component chi tiết bài viết
 const ArticleDetail = () => {
   const { id } = useParams();
-  const [article, setArticle] = useState(null);
-  const [notFound, setNotFound] = useState(false);
-  const [recentArticles, setRecentArticles] = useState([]);
+  const [article, setArticle] = useState(null); // Lưu thông tin bài viết
+  const [notFound, setNotFound] = useState(false); // Trạng thái không tìm thấy bài viết
+  const [recentArticles, setRecentArticles] = useState([]); // Danh sách bài viết mới nhất
 
-  // Lấy chi tiết bài viết
+  // Lấy chi tiết bài viết theo id
   useEffect(() => {
     fetch(`http://localhost:5000/api/articles/${id}`)
       .then((res) => {
@@ -21,7 +22,7 @@ const ArticleDetail = () => {
       .catch(() => setNotFound(true));
   }, [id]);
 
-  // Lấy bài viết mới nhất
+  // Lấy danh sách bài viết mới nhất (trừ bài hiện tại)
   useEffect(() => {
     fetch(`http://localhost:5000/api/articles`)
       .then((res) => res.json())
@@ -35,6 +36,7 @@ const ArticleDetail = () => {
       .catch((err) => console.error("Lỗi lấy bài mới:", err));
   }, [id]);
 
+  // Nếu không tìm thấy bài viết
   if (notFound) {
     return (
       <div className="p-8 text-center">
@@ -44,8 +46,10 @@ const ArticleDetail = () => {
     );
   }
 
+  // Đang tải dữ liệu
   if (!article) return <div className="p-8 text-center">Đang tải dữ liệu...</div>;
 
+  // Xử lý danh sách hình ảnh bổ sung
   let additionalImages = [];
   try {
     if (article.additional_images) {
@@ -59,12 +63,15 @@ const ArticleDetail = () => {
       <div className="lg:w-2/3">
         <Link to="/news" className="text-blue-600 underline block mb-4">← Quay lại</Link>
 
+        {/* Tiêu đề bài viết */}
         <h1 className="text-4xl font-bold text-gray-900 mb-2">{article.title}</h1>
+        {/* Thông tin tác giả và ngày tạo */}
         <div className="text-sm text-gray-500 mb-4">
           Tác giả: <strong className="text-black">{article.author}</strong> |{" "}
           {new Date(article.created_at).toLocaleDateString("vi-VN")}
         </div>
 
+        {/* Ảnh chính của bài viết */}
         {article.image_url && (
           <img
             src={article.image_url}
@@ -73,17 +80,20 @@ const ArticleDetail = () => {
           />
         )}
 
+        {/* Mô tả ngắn */}
         {article.description && (
           <p className="text-lg text-gray-700 font-medium italic mb-6 border-l-4 border-blue-600 pl-4">
             {article.description}
           </p>
         )}
 
+        {/* Nội dung bài viết */}
         <div
           className="prose prose-lg max-w-none text-justify mb-10"
           dangerouslySetInnerHTML={{ __html: article.content }}
         ></div>
 
+        {/* Hình ảnh liên quan */}
         {additionalImages.length > 0 && (
           <div className="mt-10">
             <h2 className="text-xl font-semibold mb-4">Hình ảnh liên quan</h2>
@@ -114,15 +124,18 @@ const ArticleDetail = () => {
           <ul className="space-y-4">
             {recentArticles.map((item) => (
               <li key={item.id} className="border-b pb-3">
+                {/* Tiêu đề bài viết mới */}
                 <Link
                   to={`/news/${item.id}`}
                   className="text-blue-700 hover:underline font-semibold text-sm block"
                 >
                   {item.title}
                 </Link>
+                {/* Ngày tạo */}
                 <p className="text-xs text-gray-500">
                   {new Date(item.created_at).toLocaleDateString("vi-VN")}
                 </p>
+                {/* Mô tả ngắn */}
                 {item.description && (
                   <p className="text-gray-600 text-sm line-clamp-3">
                     {item.description.length > 100

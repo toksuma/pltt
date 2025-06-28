@@ -4,8 +4,7 @@ import axios from "axios";
 const BannerPopup = () => {
   const [banner, setBanner] = useState(null);
   const [show, setShow] = useState(false);
-
-  // ✅ Tải banner khi cần (dùng lại)
+  // banner 
   const fetchBanner = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/banners/active");
@@ -28,13 +27,13 @@ const BannerPopup = () => {
     }
   }, []);
 
-  // ✅ Hàm test banner ngay
+  // Hàm test 
   const showBannerNow = () => {
     fetchBanner();
   };
 
   if (!banner || !show) {
-    // 🔘 Nút test nếu banner đang ẩn
+    // 🔘 Nút test 
     return (
       <button
         onClick={showBannerNow}

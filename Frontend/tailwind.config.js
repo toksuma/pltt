@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+/** @type {import('tailwindcss').Config} */ // Nơi chứa các pugins 
 
 export default {
   content: [
@@ -9,7 +9,7 @@ export default {
     extend: {},
   },
   plugins: [
-    require("@tailwindcss/typography"), // ✅ thêm plugin typography tại đây
+    require("@tailwindcss/typography"), 
     require("@tailwindcss/line-clamp"), 
   ],
 }

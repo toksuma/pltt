@@ -1,19 +1,15 @@
 import React from "react";
-
+{/* Mục Tổng thể của home*/}
 const Overviews = () => (
   <section className="py-16 px-4 bg-white">
     <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
-      
-      {/* PHẦN TRÁI: HÌNH NHỎ GỌN */}
       <div className="w-full md:w-1/2 flex justify-center">
         <img
-          src="/cb.png" // Đặt hình trong thư mục public
+          src="/cb.png" 
           alt="Tổng thể Landing Page"
           className="w-[300px] h-auto rounded-lg"
         />
       </div>
-
-      {/* PHẦN PHẢI: NỘI DUNG */}
       <div className="w-full md:w-1/2 text-center md:text-left">
         <h1 className="text-3xl md:text-4xl font-bold text-blue-600 mb-4">
           TỔNG THỂ VỀ LANDING PAGE

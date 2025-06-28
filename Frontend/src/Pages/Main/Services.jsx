@@ -1,5 +1,3 @@
-import React from "react";
-
 const pricingPlans = [
   {
     image: "1.png",
@@ -27,47 +25,43 @@ const pricingPlans = [
   },
 ];
 
-const Services = () => {
-  return (
-    <section className="bg-white py-10 px-[3cm]">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-red-600 mb-2">
-          DỊCH VỤ ĐANG CUNG CẤP
-        </h1>
-        <h2 className="text-xl ">
-         Chúng tôi luôn sẵn sàng cung cấp cho bạn những giải pháp dịch vụ web landing page tối ưu nhất để giúp bạn tối ưu chi phí quảng cáo, gia tăng khách hàng và tăng tỷ lệ chốt đơn cao nhất 
-        </h2>
-      </div>
-
-      <div className="flex justify-between gap-[1cm]">
-        {pricingPlans.map((plan, index) => (
-          <div
-            key={index}
-            className={`${plan.bgColor} flex-shrink-0 p-4 rounded-xl shadow-md flex flex-col justify-between`}
-            style={{ width: "calc((100% - 3cm) / 4)" }}
-          >
-            <div>
-              <img
-                src={plan.image}
-                alt={plan.title}
-                className="rounded-md mb-4 w-full h-36 object-contain"
-              />
-              <h1 className="text-xl font-bold text-center text-gray-800 mb-1">
-                {plan.title}
-              </h1>
-              <h2 className="text-center text-gray-600">{plan.subtitle}</h2>
-            </div>
-            <div className="text-center mt-6">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">
-                Xem chi tiết
-              </button>
-            </div>
+const Services = () => (
+  <section className="bg-white py-10 px-[3cm]">
+    <div className="text-center mb-8">
+      <h1 className="text-4xl font-bold text-red-600 mb-2">
+        DỊCH VỤ ĐANG CUNG CẤP
+      </h1>
+      <h2 className="text-xl">
+        Chúng tôi luôn sẵn sàng cung cấp cho bạn những giải pháp dịch vụ web landing page tối ưu nhất để giúp bạn tối ưu chi phí quảng cáo, gia tăng khách hàng và tăng tỷ lệ chốt đơn cao nhất
+      </h2>
+    </div>
+    <div className="flex justify-between gap-[1cm]">
+      {pricingPlans.map((plan, index) => (
+        <div
+          key={index}
+          className={`${plan.bgColor} flex-shrink-0 p-4 rounded-xl shadow-md flex flex-col justify-between`}
+          style={{ width: "calc((100% - 3cm) / 4)" }}
+        >
+          <div>
+            <img
+              src={plan.image}
+              alt={plan.title}
+              className="rounded-md mb-4 w-full h-36 object-contain"
+            />
+            <h1 className="text-xl font-bold text-center text-gray-800 mb-1">
+              {plan.title}
+            </h1>
+            <h2 className="text-center text-gray-600">{plan.subtitle}</h2>
           </div>
-        ))}
-      </div>
-
-         </section>
-  );
-};
+          <div className="text-center mt-6">
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">
+              Xem chi tiết
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
 
 export default Services;

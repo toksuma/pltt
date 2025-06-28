@@ -58,8 +58,42 @@ const plans = [
     iconHoverColor: "group-hover:text-green-500",
     textHoverColor: "group-hover:text-gray-900",
   },
-  
 ];
+
+function PlanCard({ plan }) {
+  return (
+    <div
+      className={`${plan.bgColor} p-6 rounded-xl shadow-lg text-center w-full max-w-[8cm]`}
+    >
+      <h2 className="text-4xl font-bold mb-2">{plan.price}</h2>
+      <h3 className={`text-xl font-semibold mb-4 ${plan.titleColor}`}>
+        {plan.title}
+      </h3>
+      <hr className="border-gray-400 mb-4" />
+      <p className="text-sm mb-6">{plan.description}</p>
+      <ul className="text-left space-y-3 mb-6">
+        {plan.features.map((feature, i) => (
+          <li
+            key={i}
+            className="group flex items-center transition-colors cursor-pointer"
+          >
+            <Check
+              className={`w-5 h-5 mr-2 text-gray-500 transition-colors duration-200 ${plan.iconHoverColor}`}
+            />
+            <span
+              className={`text-gray-700 transition-colors duration-200 ${plan.textHoverColor}`}
+            >
+              {feature}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <button className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">
+        Đăng ký ngay
+      </button>
+    </div>
+  );
+}
 
 export default function PriceList() {
   return (
@@ -73,45 +107,11 @@ export default function PriceList() {
           <span className="text-blue-600 font-bold">TÙNG MEDIA!</span>
         </h2>
       </div>
-
       <div className="flex flex-col md:flex-row justify-center items-start gap-[1cm]">
-        {plans.map((plan, index) => (
-          <div
-            key={index}
-            className={`${plan.bgColor} p-6 rounded-xl shadow-lg text-center w-full max-w-[8cm]`}
-          >
-            <h2 className="text-4xl font-bold mb-2">{plan.price}</h2>
-            <h3 className={`text-xl font-semibold mb-4 ${plan.titleColor}`}>
-              {plan.title}
-            </h3>
-            <hr className="border-gray-400 mb-4" />
-            <p className="text-sm mb-6">{plan.description}</p>
-
-            <ul className="text-left space-y-3 mb-6">
-              {plan.features.map((feature, i) => (
-                <li
-                  key={i}
-                  className={`group flex items-center transition-colors cursor-pointer`}
-                >
-                  <Check
-                    className={`w-5 h-5 mr-2 text-gray-500 transition-colors duration-200 ${plan.iconHoverColor}`}
-                  />
-                  <span
-                    className={`text-gray-700 transition-colors duration-200 ${plan.textHoverColor}`}
-                  >
-                    {feature}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <button className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">
-              Đăng ký ngay
-            </button>
-          </div>
+        {plans.map((plan, idx) => (
+          <PlanCard key={idx} plan={plan} />
         ))}
       </div>
-
       <div className="mt-12 text-gray-700 leading-relaxed max-w-4xl mx-auto text-justify">
         <p className="mb-4">
           Chính sách <strong>BẢNG GIÁ DỊCH VỤ LANDING PAGE</strong> được{" "}

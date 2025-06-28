@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 const faqs = [
   {
     question: "Để thiết kế 1 LANDING PAGE cần những gì ?",
@@ -23,6 +21,8 @@ const faqs = [
   },
 ];
 
+import { useState } from "react";
+
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
@@ -35,7 +35,6 @@ const FAQSection = () => {
       <h1 className="text-4xl font-bold text-blue-600 text-center uppercase mb-6">
         NHỮNG CÂU HỎI THƯỜNG GẶP
       </h1>
-
       <div className="w-full">
         {faqs.map((faq, index) => (
           <div

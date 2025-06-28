@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-axios.get("http://localhost:5000/api/articles")
+
+const API_URL = "http://localhost:5000/api/articles";
+
+const initialForm = {
+  title: "",
+  content: "",
+  description: "",
+  image_url: "",
+  author: "",
+  additional_images: [{ url: "", caption: "" }],
+};
 
 const AdminArticleManager = () => {
   const [articles, setArticles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [formData, setFormData] = useState(initialForm);
 
-  const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-    description: "",
-    image_url: "",
-    author: "",
-    additional_images: [{ url: "", caption: "" }],
-  });
-  
-
+  // Fetch articles from API
   const fetchArticles = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/articles");
+      const res = await axios.get(API_URL);
       setArticles(res.data);
     } catch (err) {
-      console.error("Lỗi khi lấy bài viết:", err);
+      console.error("Error fetching articles:", err);
     }
   };
 
@@ -31,9 +33,14 @@ const AdminArticleManager = () => {
     fetchArticles();
   }, []);
 
+  // Reset form to initial state
+  const resetForm = () => setFormData(initialForm);
+
+  // Handle form submit for add/edit
   const handleSubmit = async () => {
     if (!formData.title || !formData.content) {
-      return alert("Vui lòng điền tiêu đề và nội dung");
+      alert("Please fill in title and content");
+      return;
     }
 
     const payload = {
@@ -45,31 +52,32 @@ const AdminArticleManager = () => {
 
     try {
       if (editMode) {
-        await axios.put(`http://localhost:5000/api/articles/${editingId}`, payload);
+        await axios.put(`${API_URL}/${editingId}`, payload);
       } else {
-        await axios.post("http://localhost:5000/api/articles", payload);
+        await axios.post(API_URL, payload);
       }
-
       fetchArticles();
       setShowModal(false);
       setEditMode(false);
       setEditingId(null);
       resetForm();
     } catch (err) {
-      console.error("Lỗi khi gửi dữ liệu:", err);
+      console.error("Error submitting data:", err);
     }
   };
 
+  // Handle delete article
   const handleDelete = async (id) => {
-    if (!window.confirm("Xoá bài viết này?")) return;
+    if (!window.confirm("Delete this article?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/articles/${id}`);
+      await axios.delete(`${API_URL}/${id}`);
       fetchArticles();
     } catch (err) {
-      console.error("Lỗi khi xoá:", err);
+      console.error("Error deleting:", err);
     }
   };
 
+  // Handle edit article
   const handleEdit = (article) => {
     setEditMode(true);
     setEditingId(article.id);
@@ -80,8 +88,8 @@ const AdminArticleManager = () => {
       if (article.additional_images) {
         additionalImages = JSON.parse(article.additional_images);
       }
-    } catch (err) {
-      console.warn("Lỗi parse hình phụ:", err);
+    } catch {
+      // ignore parse error
     }
 
     setFormData({
@@ -94,6 +102,7 @@ const AdminArticleManager = () => {
     });
   };
 
+  // Add new additional image field
   const handleAddImage = () => {
     setFormData((prev) => ({
       ...prev,
@@ -101,21 +110,24 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Remove additional image field
   const handleRemoveImage = (index) => {
-    const updated = [...formData.additional_images];
-    updated.splice(index, 1);
-    setFormData({ ...formData, additional_images: updated });
+    setFormData((prev) => ({
+      ...prev,
+      additional_images: prev.additional_images.filter((_, i) => i !== index),
+    }));
   };
 
-  const resetForm = () => {
-    setFormData({
-      title: "",
-      content: "",
-      description: "",
-      image_url: "",
-      author: "",
-      additional_images: [{ url: "", caption: "" }],
-    });
+  // Handle input change for form fields
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Handle input change for additional images
+  const handleImageChange = (index, key, value) => {
+    const updated = [...formData.additional_images];
+    updated[index][key] = value;
+    setFormData((prev) => ({ ...prev, additional_images: updated }));
   };
 
   return (
@@ -149,7 +161,9 @@ const AdminArticleManager = () => {
               <td className="border p-2">{a.id}</td>
               <td className="border p-2">{a.title}</td>
               <td className="border p-2">{a.author}</td>
-              <td className="border p-2">{new Date(a.created_at).toLocaleDateString()}</td>
+              <td className="border p-2">
+                {new Date(a.created_at).toLocaleDateString()}
+              </td>
               <td className="border p-2 space-x-2">
                 <button
                   onClick={() => handleEdit(a)}
@@ -182,9 +196,7 @@ const AdminArticleManager = () => {
                 type="text"
                 placeholder={field.replace("_", " ")}
                 value={formData[field]}
-                onChange={(e) =>
-                  setFormData({ ...formData, [field]: e.target.value })
-                }
+                onChange={(e) => handleInputChange(field, e.target.value)}
                 className="border w-full p-2 mb-3"
               />
             ))}
@@ -192,35 +204,29 @@ const AdminArticleManager = () => {
             <textarea
               placeholder="Nội dung"
               value={formData.content}
-              onChange={(e) =>
-                setFormData({ ...formData, content: e.target.value })
-              }
+              onChange={(e) => handleInputChange("content", e.target.value)}
               className="border w-full p-2 mb-3 h-32"
             />
 
-            <h3 className="font-semibold mb-2">Bai và mô tả:</h3>
+            <h3 className="font-semibold mb-2">Hình phụ và mô tả:</h3>
             {formData.additional_images.map((img, index) => (
               <div key={index} className="mb-2 flex gap-2 items-center">
                 <input
                   type="text"
                   placeholder="Link hình"
                   value={img.url}
-                  onChange={(e) => {
-                    const updated = [...formData.additional_images];
-                    updated[index].url = e.target.value;
-                    setFormData({ ...formData, additional_images: updated });
-                  }}
+                  onChange={(e) =>
+                    handleImageChange(index, "url", e.target.value)
+                  }
                   className="border w-1/2 p-1"
                 />
                 <input
                   type="text"
                   placeholder="Mô tả"
                   value={img.caption}
-                  onChange={(e) => {
-                    const updated = [...formData.additional_images];
-                    updated[index].caption = e.target.value;
-                    setFormData({ ...formData, additional_images: updated });
-                  }}
+                  onChange={(e) =>
+                    handleImageChange(index, "caption", e.target.value)
+                  }
                   className="border w-1/2 p-1"
                 />
                 <button

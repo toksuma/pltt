@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, NavLink } from "react-router-dom";
 
 function Header() {
@@ -7,7 +6,7 @@ function Header() {
     { name: "Giao Diện", path: "/interface" },
     { name: "Bảng Giá", path: "/pricelist" },
     { name: "Dịch Vụ", path: "/service" },
-    { name: "Hợp Tác", path: "/collab" },       
+    { name: "Hợp Tác", path: "/collab" },
     { name: "Tin Tức", path: "/news" },
     { name: "Liên Hệ", path: "/contact" },
   ];
@@ -15,14 +14,12 @@ function Header() {
   return (
     <header className="bg-[#fd9374] shadow-md w-full top-0 left-0 z-50">
       <div className="max-w-screen-xl mx-auto px-6 py-4 flex justify-between items-center">
-        
         {/* Logo */}
         <div className="flex items-center space-x-4 pr-8">
           <img src="/Logo.png" alt="Logo" className="h-10 w-auto" />
-          <span className="text-white text-3xl font-semibold">TungPageV5</span>
+          <span className="text-white text-3xl font-semibold">TungPageFinal</span>
         </div>
-
-         {/* Menu */}                                 
+        {/* Menu */}
         <nav className="hidden md:flex space-x-6">
           {menuItems.map((item) => (
             <NavLink
@@ -32,7 +29,7 @@ function Header() {
                 `text-2xl transition duration-200 ${
                   isActive
                     ? "text-[#d3046c] font-bold"
-                    : "text-white hover:text-[#d3046c] hover:font-bold hover:underline "
+                    : "text-white hover:text-[#d3046c] hover:font-bold hover:underline"
                 }`
               }
             >
@@ -40,7 +37,6 @@ function Header() {
             </NavLink>
           ))}
         </nav>
-
         {/* Nút */}
         <div className="hidden md:block pl-4">
           <Link to="/login">

@@ -1,4 +1,4 @@
-  import React, { useEffect, useState } from "react";
+  import { useEffect, useState } from "react";
   import Sidebar from "./Sidebar";
   import axios from "axios";
   import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
@@ -18,16 +18,13 @@
         const data = res.data;
         setContacts(data);
 
-        // Tính toán tần suất chọn mã landing page
         const landingMap = {};
         const keywordMap = {};
 
         data.forEach((item) => {
-          // Mã landing page
           const code = item.landing_code || "Không có";
           landingMap[code] = (landingMap[code] || 0) + 1;
 
-          // Phân tích keyword từ lời nhắn
           const message = item.message?.toLowerCase() || "";
           const keywords = message.match(/\b\w+\b/g) || [];
           keywords.forEach((kw) => {
@@ -60,7 +57,7 @@
         <main className="flex-1 p-6">
           <h1 className="text-2xl font-bold mb-4 text-gray-700">📥 Quản lý Form Liên hệ</h1>
 
-          {/* Biểu đồ landing page */}
+          {/*Chart */}
           <section className="bg-white p-4 rounded-xl shadow mb-8">
             <h2 className="text-xl font-semibold text-blue-600 mb-2">Tần suất chọn Landing Page</h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -73,7 +70,7 @@
             </ResponsiveContainer>
           </section>
 
-          {/* Biểu đồ keyword */}
+          {/* Keyword Chart */}
           <section className="bg-white p-4 rounded-xl shadow mb-8">
             <h2 className="text-xl font-semibold text-green-600 mb-2">Từ khóa phổ biến trong lời nhắn</h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -86,7 +83,7 @@
             </ResponsiveContainer>
           </section>
 
-          {/* Bảng dữ liệu */}
+          {/* Contacts Table */}
           <section className="bg-white p-4 rounded-xl shadow">
             <h2 className="text-xl font-semibold text-gray-700 mb-4">📋 Danh sách liên hệ</h2>
             <div className="overflow-auto">

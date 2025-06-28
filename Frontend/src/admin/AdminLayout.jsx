@@ -5,16 +5,14 @@ import { FaCog } from "react-icons/fa";
 
 const LayoutAdmin = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [isHovering, setIsHovering] = useState(false); // để xử lý hover
+  const [isHovering, setIsHovering] = useState(false); 
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
   return (
     <div className="relative min-h-screen bg-gray-100">
-      {/* SIDEBAR */}
-      <Sidebar isOpen={isSidebarOpen} />
-
-      {/* NÚT ⚙️ MỞ/ĐÓNG */}
+        <Sidebar isOpen={isSidebarOpen} />
+      {/* NÚT*/}
       <button
         onClick={toggleSidebar}
         className="fixed top-[80px] z-40 w-12 h-12 bg-gray-800 text-white rounded-r-full 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 
@@ -11,7 +11,6 @@ const AdminBannerManager = () => {
     active: false,
   });
 
-  // ✅ Hàm lấy danh sách banner
   const fetchBanners = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/banners");
@@ -22,7 +21,6 @@ const AdminBannerManager = () => {
     }
   };
 
-  // ✅ Hàm thêm banner mới
   const handleSubmit = async (e) => {
     e.preventDefault();
     await axios.post("http://localhost:5000/api/banners", form);
@@ -30,7 +28,6 @@ const AdminBannerManager = () => {
     fetchBanners();
   };
 
-  // ✅ Hàm xoá banner
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn xoá banner này không?")) {
       await axios.delete(`http://localhost:5000/api/banners/${id}`);
@@ -38,7 +35,6 @@ const AdminBannerManager = () => {
     }
   };
 
-  // ✅ Hàm kích hoạt banner
   const handleActivate = async (id) => {
     try {
       await axios.put(`http://localhost:5000/api/banners/${id}/activate`);
@@ -57,8 +53,6 @@ const AdminBannerManager = () => {
       <Sidebar />
       <div className="p-6 w-full">
         <h1 className="text-2xl font-bold mb-4">Quản lý Banner</h1>
-
-        {/* Form thêm banner */}
         <form onSubmit={handleSubmit} className="mb-8 space-y-4">
           <input
             type="text"
@@ -98,8 +92,6 @@ const AdminBannerManager = () => {
             Thêm Banner
           </button>
         </form>
-
-        {/* Danh sách banner */}
         <h2 className="text-xl font-semibold mb-4">Danh sách Banner</h2>
         <div className="space-y-4">
           {banners.map((banner) => (

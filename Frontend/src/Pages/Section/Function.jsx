@@ -1,12 +1,8 @@
-import React from "react";
-
 const FunctionSection = () => (
   <section className="py-12 px-4 bg-white text-center">
-    {/* SECTION: TÍNH NĂNG SẼ CÓ TRÊN LANDING PAGE */}
     <h1 className="text-3xl md:text-4xl font-bold text-green-600 mb-10">
       TÍNH NĂNG SẼ CÓ TRÊN LANDING PAGE
     </h1>
-
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 max-w-7xl mx-auto text-xl">
       {[
         "Cài đặt miễn phí SSL cho Website",
