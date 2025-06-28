@@ -50,7 +50,7 @@ const Sidebar = ({ isOpen }) => {
     >
       <div className="p-4 border-b border-gray-700">
         <h3 className="text-lg font-bold">QUẢN TRỊ WEBSITE</h3>
-        <p className="text-sm text-gray-400">TungPageV4</p>
+        <p className="text-sm text-gray-400">TungPageV7</p>
         <p className="text-sm text-green-400 mt-2">
           👤 Tài khoản: {username}
         </p>
