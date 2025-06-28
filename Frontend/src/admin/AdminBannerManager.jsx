@@ -4,13 +4,15 @@ import axios from "axios";
 
 const AdminBannerManager = () => {
   const [banners, setBanners] = useState([]);
+  const [previewBanner, setPreviewBanner] = useState(null);
+  const [editingBannerId, setEditingBannerId] = useState(null);
   const [form, setForm] = useState({
     title: "",
     description: "",
     image_url: "",
     active: false,
-    overlay_text: "LANDING PAGE TRỌN GÓI",
-    overlay_color: "#FF0000",
+    overlay_text: "",
+    overlay_color: "",
   });
 
   const fetchBanners = async () => {
@@ -25,7 +27,12 @@ const AdminBannerManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post("http://localhost:5000/api/banners", form);
+    if (editingBannerId) {
+      await axios.put(`http://localhost:5000/api/banners/${editingBannerId}`, form);
+    } else {
+      await axios.post("http://localhost:5000/api/banners", form);
+    }
+
     setForm({
       title: "",
       description: "",
@@ -34,7 +41,21 @@ const AdminBannerManager = () => {
       overlay_text: "LANDING PAGE TRỌN GÓI",
       overlay_color: "#FF0000",
     });
+    setEditingBannerId(null);
     fetchBanners();
+  };
+
+  const handleEdit = (banner) => {
+    setForm({
+      title: banner.title || "",
+      description: banner.description || "",
+      image_url: banner.image_url || "",
+      active: banner.active || false,
+      overlay_text: banner.overlay_text || "",
+      overlay_color: banner.overlay_color || "#FF0000",
+    });
+    setEditingBannerId(banner.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleDelete = async (id) => {
@@ -72,9 +93,11 @@ const AdminBannerManager = () => {
     <div className="flex">
       <Sidebar />
       <div className="p-6 w-full">
-        <h1 className="text-2xl font-bold mb-4">Quản lý Banner</h1>
+        <h1 className="text-2xl font-bold mb-4">
+          {editingBannerId ? "Chỉnh sửa Banner" : "Thêm Banner"}
+        </h1>
 
-        {/* FORM THÊM BANNER */}
+        {/* FORM THÊM/SỬA BANNER */}
         <form onSubmit={handleSubmit} className="space-y-4 mb-8">
           <input
             type="text"
@@ -101,17 +124,19 @@ const AdminBannerManager = () => {
           />
           <input
             type="text"
-            placeholder="Chữ trên ảnh (overlay)"
+            placeholder="Chữ overlay"
             className="border border-gray-300 px-3 py-2 rounded w-full"
             value={form.overlay_text}
             onChange={(e) => setForm({ ...form, overlay_text: e.target.value })}
           />
           <input
             type="text"
-            placeholder="Màu chữ overlay (#hex)"
+            placeholder="Màu overlay (#hex)"
             className="border border-gray-300 px-3 py-2 rounded w-full"
             value={form.overlay_color}
-            onChange={(e) => setForm({ ...form, overlay_color: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, overlay_color: e.target.value })
+            }
           />
           <label className="flex items-center gap-2">
             <input
@@ -121,12 +146,33 @@ const AdminBannerManager = () => {
             />
             <span>Đặt là banner đang hoạt động</span>
           </label>
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Thêm Banner
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              {editingBannerId ? "Cập nhật" : "Thêm Banner"}
+            </button>
+            {editingBannerId && (
+              <button
+                type="button"
+                onClick={() => {
+                  setForm({
+                    title: "",
+                    description: "",
+                    image_url: "",
+                    active: false,
+                    overlay_text: "LANDING PAGE TRỌN GÓI",
+                    overlay_color: "#FF0000",
+                  });
+                  setEditingBannerId(null);
+                }}
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+              >
+                Hủy
+              </button>
+            )}
+          </div>
         </form>
 
         {/* DANH SÁCH BANNER */}
@@ -142,7 +188,7 @@ const AdminBannerManager = () => {
                 key={b.id}
                 className="flex flex-col lg:flex-row border rounded shadow overflow-hidden"
               >
-                {/* Bên trái: hình và overlay */}
+                {/* Hình ảnh và overlay */}
                 <div className="w-full lg:w-1/2 relative h-64">
                   <img
                     src={b.image_url}
@@ -159,7 +205,7 @@ const AdminBannerManager = () => {
                   )}
                 </div>
 
-                {/* Bên phải: nội dung */}
+                {/* Nội dung */}
                 <div className="w-full lg:w-1/2 p-4 flex flex-col justify-between">
                   <div>
                     <p className="text-xl font-bold text-red-600">
@@ -203,7 +249,19 @@ const AdminBannerManager = () => {
                     </div>
                   )}
 
-                  <div className="flex justify-end space-x-4 mt-4">
+                  <div className="flex justify-end space-x-4 mt-4 text-sm">
+                    <button
+                      onClick={() => setPreviewBanner(b)}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      Test Banner
+                    </button>
+                    <button
+                      onClick={() => handleEdit(b)}
+                      className="text-yellow-600 hover:text-yellow-800"
+                    >
+                      Sửa
+                    </button>
                     {!b.active && (
                       <button
                         onClick={() => handleActivate(b.id)}
@@ -224,6 +282,83 @@ const AdminBannerManager = () => {
             );
           })}
         </div>
+
+        {/* POPUP TEST BANNER */}
+        {previewBanner && (
+          <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
+            <div className="bg-white max-w-4xl w-full rounded shadow overflow-hidden relative">
+              <div className="flex flex-col lg:flex-row">
+                {/* Hình ảnh */}
+                <div className="w-full lg:w-1/2 relative h-80">
+                  <img
+                    src={previewBanner.image_url}
+                    alt="banner"
+                    className="w-full h-full object-cover"
+                  />
+                  {previewBanner.overlay_text && (
+                    <div
+                      className="absolute top-4 left-4 text-2xl font-bold drop-shadow"
+                      style={{
+                        color: previewBanner.overlay_color || "#FFFFFF",
+                      }}
+                    >
+                      {previewBanner.overlay_text}
+                    </div>
+                  )}
+                </div>
+                {/* Nội dung */}
+                <div className="w-full lg:w-1/2 p-6 flex flex-col justify-between">
+                  <div>
+                    <p className="text-xl font-bold text-red-600">
+                      {previewBanner.title}
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      {previewBanner.description}
+                    </p>
+                    <input
+                      type="text"
+                      placeholder="Số điện thoại"
+                      className="border px-3 py-2 rounded w-full mb-2"
+                    />
+                    <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold w-full">
+                      ĐĂNG KÝ NGAY
+                    </button>
+                  </div>
+
+                  {previewBanner.active && (
+                    <div className="text-center mt-4">
+                      <p className="font-bold text-sm">THỜI GIAN KHUYẾN MÃI CÒN</p>
+                      <div className="flex justify-center mt-1 text-white font-bold text-sm">
+                        {["Giờ", "Phút", "Giây"].map((unit, idx) => {
+                          const { h, m, s } = getCountdown(
+                            previewBanner.updated_at || previewBanner.created_at
+                          );
+                          const time = [h, m, s][idx];
+                          return (
+                            <div
+                              key={unit}
+                              className="bg-blue-600 px-2 py-1 mx-1 rounded"
+                            >
+                              {time}
+                              <br />
+                              <span className="text-xs font-normal">{unit}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <button
+                onClick={() => setPreviewBanner(null)}
+                className="absolute top-2 right-2 bg-white border px-3 py-1 rounded hover:bg-gray-200"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

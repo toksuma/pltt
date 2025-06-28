@@ -1,6 +1,6 @@
-const express = require("express"); // ✅ Dùng require
+const express = require("express");
 const router = express.Router();
-const db = require("../db");        // ✅ Cũng dùng require
+const db = require("../db");
 
 // Lấy tất cả banner
 router.get("/", (req, res) => {
@@ -44,6 +44,54 @@ router.post("/", (req, res) => {
   }
 });
 
+// Sửa banner theo ID
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const {
+    title,
+    description,
+    image_url,
+    active,
+    overlay_text,
+    overlay_color,
+  } = req.body;
+
+  const sql = `
+    UPDATE banners SET 
+      title = ?, 
+      description = ?, 
+      image_url = ?, 
+      active = ?, 
+      overlay_text = ?, 
+      overlay_color = ?,
+      updated_at = NOW()
+    WHERE id = ?
+  `;
+
+  const values = [
+    title,
+    description,
+    image_url,
+    active ? 1 : 0,
+    overlay_text,
+    overlay_color,
+    id,
+  ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Lỗi khi cập nhật banner:", err);
+      return res.status(500).json({ error: "Cập nhật thất bại" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Không tìm thấy banner để cập nhật" });
+    }
+
+    res.json({ message: "Cập nhật thành công" });
+  });
+});
+
 // Xoá banner
 router.delete("/:id", (req, res) => {
   db.query("DELETE FROM banners WHERE id = ?", [req.params.id], (err) => {
@@ -63,4 +111,4 @@ router.put("/:id/activate", (req, res) => {
   });
 });
 
-module.exports = router; // ✅ Chuẩn CommonJS
+module.exports = router;

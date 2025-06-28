@@ -1,28 +1,27 @@
-// middleware/auth.js
 const jwt = require("jsonwebtoken");
-const secret = "your_jwt_secret"; // Để trong .env nếu muốn bảo mật hơn
+const SECRET_KEY = "your_secret_key";
 
-// Kiểm tra người dùng đã đăng nhập chưa
-function authenticate(req, res, next) {
+const authenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ message: "Chưa đăng nhập" });
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Không có token" });
 
-  const token = authHeader.split(" ")[1];
-  jwt.verify(token, secret, (err, decoded) => {
-    if (err) return res.status(403).json({ message: "Token không hợp lệ" });
-    req.user = decoded; // Gắn dữ liệu người dùng vào request
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    req.user = decoded;
     next();
-  });
-}
+  } catch (err) {
+    res.status(403).json({ error: "Token không hợp lệ" });
+  }
+};
 
-// Phân quyền theo role
-function authorize(...roles) {
+const authorize = (role) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Không đủ quyền" });
+    if (req.user?.role !== role) {
+      return res.status(403).json({ error: "Không có quyền truy cập" });
     }
     next();
   };
-}
+};
 
 module.exports = { authenticate, authorize };

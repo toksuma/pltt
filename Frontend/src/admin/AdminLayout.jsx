@@ -1,18 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { FaCog } from "react-icons/fa";
 
-const LayoutAdmin = () => {
+const AdminLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [isHovering, setIsHovering] = useState(false); 
+  const [isHovering, setIsHovering] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/admin/login");
+    } else {
+      setIsAuthorized(true);
+    }
+  }, [navigate]);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
+  if (!isAuthorized) return null; // tránh render sớm trước khi kiểm tra token
+
   return (
     <div className="relative min-h-screen bg-gray-100">
-        <Sidebar isOpen={isSidebarOpen} />
-      {/* NÚT*/}
+      <Sidebar isOpen={isSidebarOpen} />
+
+      {/* NÚT THU GỌN/MỞ RỘNG */}
       <button
         onClick={toggleSidebar}
         className="fixed top-[80px] z-40 w-12 h-12 bg-gray-800 text-white rounded-r-full 
@@ -50,4 +64,4 @@ const LayoutAdmin = () => {
   );
 };
 
-export default LayoutAdmin;
+export default AdminLayout;

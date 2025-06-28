@@ -25,7 +25,7 @@ const BannerPopup = () => {
   useEffect(() => {
     const lastShown = localStorage.getItem("banner_last_shown");
     const now = Date.now();
-    if (!lastShown || now - lastShown > 3600000) {
+    if (!lastShown || now - lastShown > 36) {
       fetchBanner();
     }
   }, []);
