@@ -1,56 +1,105 @@
-const templates = Array.from({ length: 20 }, (_, i) => ({
-  label: `GIAO DIỆN ${i + 1}`,
-  code: `MÃ LDP${String(i + 1).padStart(2, "0")}`,
-  link: `https://bds.dichvulandingpage.com/bds${20 + i}`,
-}));
+// src/pages/InterfaceList.jsx
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const TemplatePage = () => (
-  <section className="bg-white py-12 px-4 sm:px-10 lg:px-[3cm] w-full">
-    <h1 className="text-4xl font-bold text-blue-600 text-center uppercase mb-10">
-      MẪU GIAO DIỆN LANDING PAGE
-    </h1>
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 mb-12">
-      {templates.map(({ label, code, link }) => (
-        <div key={code} className="flex flex-col items-center">
-          <a
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full"
-          >
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-full text-2xl font-semibold w-full hover:bg-yellow-600 transition">
-              {label}
-            </button>
-          </a>
-          <p className="text-gray-700 mt-2 text-xl font-bold text-center">
-            {code}
-          </p>
-        </div>
-      ))}
-    </div>
-    <div className="flex justify-center mb-10">
-      <a
-        href="https://docs.google.com/spreadsheets/d/1YPEwZ4CnLVJkRPSG1-f1mwiysZf54VfQnP6B7ED0VME/edit?pli=1&gid=0#gid=0"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full text-lg font-bold shadow-md transition">
-          XEM THÊM ĐẦY ĐỦ GIAO DIỆN
-        </button>
-      </a>
-    </div>
-    <h2 className="text-justify text-lg text-gray-800 leading-relaxed">
-      <strong className="text-red-600">DICHVULANDINGPAGE.COM</strong> là nơi chuyên thiết kế ra những
-      <strong className="text-pink-500"> MẪU GIAO DIỆN LANDING PAGE</strong> đẹp và chuyên nghiệp phù hợp cho nhiều ngành nghề.
-      <strong> ƯU ĐIỂM</strong> của landing page được thiết kế bởi Cao MEDIA là giao diện đẹp và bắt mắt, tối ưu hoá khả năng chuyển đổi, có tốc độ load trang nhanh, độ
-      <strong className="text-blue-600"> CHUẨN SEO</strong> lên tới 100% giúp gia tăng thứ hạng tìm kiểm trên GOOGLE làm gia tăng lượng truy cập vào trang LANDING PAGE.
-      <br />
-      Với đội ngũ nhân sự giàu kinh nghiệm đã trải qua nhiều dự án và với kho giao diện LANDING PAGE mẫu đa dạng, chúng tôi công ty
-      <strong> CCO MEDIA</strong> tự tin sẽ mang tới cho quý <strong>KHÁCH HÀNG</strong> 1 trang web landing page ƯNG Ý nhất góp phần giúp bạn phát triển công việc
-      <strong> KINH DOANH ONLINE</strong> tốt nhất. Nếu bạn cần triển khai thiết kế landing page hãy liên hệ ngay với chúng tôi để được đội ngũ chuyên gia hỗ trợ
-      <strong className="text-red-600"> TƯ VẤN MIỄN PHÍ</strong> hoàn toàn bạn nhé.
-    </h2>
-  </section>
-);
+const InterfaceList = () => {
+  const [interfaces, setInterfaces] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-export default TemplatePage;
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const [interfaceRes, categoryRes] = await Promise.all([
+      axios.get("http://localhost:5000/api/interfaces"),
+      axios.get("http://localhost:5000/api/interfaces/categories"),
+    ]);
+    setInterfaces(interfaceRes.data);
+    setFiltered(interfaceRes.data);
+    setCategories(categoryRes.data);
+  };
+
+  useEffect(() => {
+    let result = [...interfaces];
+
+    if (search.trim()) {
+      result = result.filter((item) =>
+        item.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (selectedCategory) {
+      result = result.filter((item) => item.category_id === parseInt(selectedCategory));
+    }
+
+    setFiltered(result);
+  }, [search, selectedCategory, interfaces]);
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6 text-blue-800">
+        MẪU GIAO DIỆN LANDING PAGE:
+      </h1>
+
+      {/* Thanh tìm kiếm và dropdown */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+        <input
+          type="text"
+          placeholder="Tìm theo tên..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border p-2 rounded w-full sm:w-1/2"
+        />
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="border p-2 rounded w-full sm:w-1/3"
+        >
+          <option value="">Tất cả hạng mục</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name} ({cat.count} mục)
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Giao diện hiển thị */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {filtered.map((item) => (
+          <div key={item.id} className="bg-white border shadow rounded p-4">
+            <h4 className="font-bold text-lg mb-1">{item.name}</h4>
+            <p className="text-sm text-gray-600 mb-1">Mã: {item.code}</p>
+            <img
+              src={`https://api.thumbnail.ws/api/ab123456789/thumbnail/get?url=${encodeURIComponent(
+                item.url
+              )}&width=480`}
+              alt="Preview"
+              className="w-full h-40 object-cover rounded mb-2"
+            />
+            <p className="text-sm text-gray-700 mb-2">
+              Thể loại: {item.category_name || "Không rõ"}
+            </p>
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block bg-blue-600 text-white text-sm px-4 py-2 rounded"
+            >
+              Xem chi tiết
+            </a>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <p className="text-gray-500 col-span-full">Không có giao diện phù hợp.</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default InterfaceList;

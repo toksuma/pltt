@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 
 import AdminArticleManager from './admin/AdminArticleManager';  
 import AdminBannerManager from './admin/AdminBannerManager';  
+import AdminInterfaceManager from './admin/AdminInterfaceManager'; // ✅ THÊM DÒNG NÀY
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingButtons from './components/AddOn';
@@ -28,16 +29,11 @@ import Unauthorized from './admin/Unauthorized';
 
 function AppContent() {
   const location = useLocation();
-
-  // ✅ Ẩn footer và floating nếu là trang admin
   const isAdminRoute = location.pathname.startsWith("/admin");
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      {/* ✅ Luôn luôn hiển thị Header */}
       <Header />
-
-      {/* ✅ BannerPopup chỉ hiển thị nếu KHÔNG phải admin */}
       {!isAdminRoute && <BannerPopup />}
 
       <main className="flex-grow min-h-[calc(100vh-250px)]">
@@ -51,7 +47,6 @@ function AppContent() {
           <Route path="/Service" element={<Services />} />
           <Route path="/Collab" element={<Collab />} />
           <Route path="/Login" element={<Login />} />
-
           <Route path="/admin/login" element={<AdminLogin />} />
 
           <Route
@@ -70,13 +65,13 @@ function AppContent() {
             <Route path="articles" element={<AdminArticleManager />} />
             <Route path="contacts" element={<ContactManager />} />
             <Route path="banners" element={<AdminBannerManager />} />
+            <Route path="interfaces" element={<AdminInterfaceManager />} /> {/* ✅ THÊM DÒNG NÀY */}
           </Route>
 
           <Route path="/admin/unauthorized" element={<Unauthorized />} />
         </Routes>
       </main>
 
-      {/* ✅ Footer & FloatingButtons chỉ hiển thị nếu không phải admin */}
       {!isAdminRoute && (
         <>
           <FloatingButtons />

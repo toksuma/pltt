@@ -6,6 +6,7 @@ import {
   FaEnvelope,
   FaImage,
   FaSignOutAlt,
+  FaCogs, // ✅ THÊM ICON
 } from "react-icons/fa";
 
 const Sidebar = ({ isOpen }) => {
@@ -103,6 +104,17 @@ const Sidebar = ({ isOpen }) => {
             <span>Quản lý banner</span>
           </Link>
         </li>
+        <li>
+          <Link
+            to="/admin/interfaces"
+            className={`flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 ${
+              isActive("/admin/interfaces") ? "bg-gray-700" : ""
+            }`}
+          >
+            <FaCogs />
+            <span>Quản lý giao diện</span>
+          </Link>
+        </li>
       </ul>
 
       <div className="p-4 border-t border-gray-700 text-center">
@@ -119,3 +131,4 @@ const Sidebar = ({ isOpen }) => {
 };
 
 export default Sidebar;
+  
