@@ -4,7 +4,7 @@ const db = require("../db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const SECRET_KEY = "your_secret_key"; // nên dùng dotenv sau
+const SECRET_KEY = "your_secret_key"; 
 
 router.post("/login", (req, res) => {
   const { username, password } = req.body;
@@ -22,8 +22,10 @@ router.post("/login", (req, res) => {
       SECRET_KEY,
       { expiresIn: "1d" }
     );
-console.log("Mật khẩu người dùng nhập:", password);
-console.log("Mật khẩu trong DB (đã hash):", user.password);
+
+    console.log("Mật khẩu người dùng nhập:", password);
+    console.log("Mật khẩu trong DB (đã hash):", user.password);
+
     res.json({ token, role: user.role });
   });
 });

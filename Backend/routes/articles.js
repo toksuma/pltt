@@ -3,13 +3,13 @@ const router = express.Router();
 const db = require("../db");
 const { authenticate, authorize } = require("../middleware/auth"); 
 
-
+// Route chỉ cho admin truy cập
 router.get("/admin-list", authenticate, authorize("admin"), (req, res) => {
   res.json({ message: "Danh sách chỉ admin được xem" });
 });
 
 
-// Lấy tất cả bài viết
+// lấy tất cả bài viết
 router.get("/", (req, res) => {
   const sql = "SELECT * FROM articles ORDER BY id DESC";
   db.query(sql, (err, results) => {
@@ -51,7 +51,7 @@ router.post("/", (req, res) => {
       return res.status(500).json({ error: "Lỗi thêm bài viết" });
     }
 
-    // Ghi log hoạt động
+    // Ghi log hoạt động thêm bài viết
     const logSql = `INSERT INTO activity_logs (action_type, title, user) VALUES ('article_add', ?, ?)`;
     db.query(logSql, [title, author], () => {});
 
@@ -76,7 +76,7 @@ router.put("/:id", (req, res) => {
       return res.status(500).json({ error: "Lỗi cập nhật bài viết" });
     }
 
-    // Ghi log hoạt động
+    // Ghi log hoạt động chỉnh sửa bài viết
     const logSql = `INSERT INTO activity_logs (action_type, title, user) VALUES ('article_edit', ?, ?)`;
     db.query(logSql, [title, author], () => {});
 
@@ -98,6 +98,8 @@ router.delete("/:id", (req, res) => {
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Không tìm thấy bài viết để xoá" });
     }
+
+    // Ghi log xoá bài viết
     const log = {
       action_type: "xoá",
       title: `ID ${id}`,
@@ -113,6 +115,5 @@ router.delete("/:id", (req, res) => {
     res.json({ message: "Xoá bài viết thành công" });
   });
 });
-
 
 module.exports = router;

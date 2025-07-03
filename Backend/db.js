@@ -3,8 +3,8 @@ const mysql = require("mysql2");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "admin",       // đổi nếu khác
-  database: "pltt_news",   // hoặc database bro đang dùng
+  password: "admin",       // đổi dl
+  database: "pltt_news",  
 });
 
 db.connect((err) => {

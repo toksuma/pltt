@@ -4,19 +4,27 @@ import axios from "axios";
 const API_URL = "http://localhost:5000/api/articles";
 
 const AdminArticleManager = () => {
+  // Danh sách bài viết
   const [articles, setArticles] = useState([]);
+
+  // Trạng thái bật/tắt popup
   const [showPopup, setShowPopup] = useState(false);
+
+  // ID bài viết đang chỉnh sửa
   const [editingId, setEditingId] = useState(null);
+
+  // Dữ liệu form bài viết
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     author: "",
     image_url: "",
-    contentBlocks: [""],
-    interleavedImages: [{ url: "", caption: "" }],
-    additional_images: [{ url: "", caption: "" }],
+    contentBlocks: [""], // các đoạn văn bản chính
+    interleavedImages: [{ url: "", caption: "" }], // ảnh chèn giữa các đoạn
+    additional_images: [{ url: "", caption: "" }], // ảnh phụ bên dưới bài
   });
 
+  // Gọi API lấy danh sách bài viết
   const fetchArticles = async () => {
     try {
       const res = await axios.get(API_URL);
@@ -30,11 +38,13 @@ const AdminArticleManager = () => {
     fetchArticles();
   }, []);
 
+  // Xử lý gửi dữ liệu bài viết
   const handleSubmit = async () => {
+    // Gộp contentBlocks + ảnh interleaved thành HTML
     const mergedContent = formData.contentBlocks
       .map((block, i) => {
         const img = formData.interleavedImages[i];
-        let html = `${block}`; // KHÔNG thêm <div> hay <br>
+        let html = `${block}`;
         if (img?.url) {
           html += `
             <div style="text-align:center;">
@@ -44,7 +54,7 @@ const AdminArticleManager = () => {
         }
         return html;
       })
-      .join(""); // nối liền, không <br>
+      .join("");
 
     const payload = {
       ...formData,
@@ -61,6 +71,7 @@ const AdminArticleManager = () => {
         await axios.post(API_URL, payload);
       }
 
+      // Reset form sau khi lưu
       setShowPopup(false);
       setEditingId(null);
       setFormData({
@@ -72,29 +83,14 @@ const AdminArticleManager = () => {
         interleavedImages: [{ url: "", caption: "" }],
         additional_images: [{ url: "", caption: "" }],
       });
+
       fetchArticles();
     } catch (err) {
       console.error("Lỗi khi gửi bài viết:", err);
     }
   };
 
-  const handleEdit = (article) => {
-    const { blocks, images } = splitContentToBlocks(article.content || "");
-    setFormData({
-      title: article.title || "",
-      description: article.description || "",
-      author: article.author || "",
-      image_url: article.image_url || "",
-      contentBlocks: blocks,
-      interleavedImages: images,
-      additional_images: article.additional_images
-        ? JSON.parse(article.additional_images)
-        : [{ url: "", caption: "" }],
-    });
-    setEditingId(article.id);
-    setShowPopup(true);
-  };
-
+  // Tách HTML content thành contentBlocks + interleavedImages để chỉnh sửa
   const splitContentToBlocks = (htmlContent) => {
     const parts = htmlContent.split(/<div style="text-align:center;">/i);
     const blocks = [];
@@ -123,6 +119,25 @@ const AdminArticleManager = () => {
     return { blocks, images };
   };
 
+  // Chỉnh sửa bài viết
+  const handleEdit = (article) => {
+    const { blocks, images } = splitContentToBlocks(article.content || "");
+    setFormData({
+      title: article.title || "",
+      description: article.description || "",
+      author: article.author || "",
+      image_url: article.image_url || "",
+      contentBlocks: blocks,
+      interleavedImages: images,
+      additional_images: article.additional_images
+        ? JSON.parse(article.additional_images)
+        : [{ url: "", caption: "" }],
+    });
+    setEditingId(article.id);
+    setShowPopup(true);
+  };
+
+  // Xoá bài viết
   const handleDelete = async (id) => {
     if (!window.confirm("Xoá bài viết này?")) return;
     try {
@@ -133,6 +148,7 @@ const AdminArticleManager = () => {
     }
   };
 
+  // Thêm đoạn content mới
   const handleAddBlock = () => {
     setFormData((prev) => ({
       ...prev,
@@ -141,6 +157,7 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Xoá đoạn content
   const handleRemoveBlock = (index) => {
     const newBlocks = [...formData.contentBlocks];
     const newImages = [...formData.interleavedImages];
@@ -153,12 +170,14 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Cập nhật nội dung từng đoạn
   const handleBlockChange = (index, html) => {
     const updated = [...formData.contentBlocks];
     updated[index] = html;
     setFormData((prev) => ({ ...prev, contentBlocks: updated }));
   };
 
+  // Cập nhật ảnh chèn giữa nội dung
   const handleImageInputChange = (index, key, value) => {
     const updated = [...formData.interleavedImages];
     if (!updated[index]) updated[index] = { url: "", caption: "" };
@@ -166,6 +185,7 @@ const AdminArticleManager = () => {
     setFormData((prev) => ({ ...prev, interleavedImages: updated }));
   };
 
+  // Thêm thông tin footer mặc định
   const handleAddFooterInfo = () => {
     const footerHTML = `Website: https://dichvulandingpage.com<br>Email: dichvuweblandingpage@gmail.com<br>Điện thoại: 0902.813.410`;
     setFormData((prev) => ({
@@ -175,6 +195,7 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Thêm ảnh phụ
   const handleAddRelatedImage = () => {
     setFormData((prev) => ({
       ...prev,
@@ -182,6 +203,7 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Xoá ảnh phụ
   const handleRemoveRelatedImage = (index) => {
     setFormData((prev) => ({
       ...prev,
@@ -189,12 +211,14 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Cập nhật ảnh phụ
   const handleRelatedImageChange = (index, key, value) => {
     const updated = [...formData.additional_images];
     updated[index][key] = value;
     setFormData((prev) => ({ ...prev, additional_images: updated }));
   };
 
+  // Cập nhật input đơn (title, description, author,...)
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -229,7 +253,9 @@ const AdminArticleManager = () => {
               <td className="border p-2">{a.id}</td>
               <td className="border p-2">{a.title}</td>
               <td className="border p-2">{a.author}</td>
-              <td className="border p-2">{new Date(a.created_at).toLocaleDateString()}</td>
+              <td className="border p-2">
+                {new Date(a.created_at).toLocaleDateString()}
+              </td>
               <td className="border p-2 space-x-2">
                 <button
                   onClick={() => handleEdit(a)}

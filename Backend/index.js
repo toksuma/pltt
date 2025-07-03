@@ -17,7 +17,7 @@ app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/contacts", require("./routes/contacts"));
 app.use("/api/articles", require("./routes/articles"));
 
-// ✅ AUTH – Đúng đường dẫn login sẽ là: http://localhost:5000/api/login
+// AUTH – Đúng đường dẫn login sẽ là: http://localhost:5000/api/login
 app.use("/api", require("./routes/auth"));
 
 app.get("/api/admin-only", authenticate, authorize("admin"), (req, res) => {

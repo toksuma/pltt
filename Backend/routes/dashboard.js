@@ -13,12 +13,9 @@ router.get("/", (req, res) => {
 
   db.query(statsQuery, (err, result) => {
     if (err) {
-      console.error("❌ Lỗi truy vấn dashboard stats:", err);
+      console.error("Lỗi truy vấn dashboard stats:", err);
       return res.status(500).json({ error: "Lỗi server" });
     }
-
-    // Kiểm tra kỹ kết quả
-    console.log("📊 Dashboard result raw:", result);
 
     if (result && result.length > 0) {
       res.json(result[0]);
@@ -29,3 +26,19 @@ router.get("/", (req, res) => {
 });
 
 module.exports = router;
+// Lấy logs hoạt động gần đây
+router.get("/recent", (req, res) => {
+  const logsQuery = `
+    SELECT * FROM activity_logs 
+    ORDER BY created_at DESC 
+    LIMIT 10
+  `;
+
+  db.query(logsQuery, (err, results) => {
+    if (err) {
+      console.error("Lỗi truy vấn logs hoạt động:", err);
+      return res.status(500).json({ error: "Lỗi server" });
+    }
+    res.json(results);
+  });
+} );    

@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db");
+const db = require("../db"); // Kết nối CSDL
 
+// GET /api/contacts
+// Lấy toàn bộ liên hệ từ bảng `contacts`, sắp xếp mới nhất trước
 router.get("/", (req, res) => {
   const sql = "SELECT * FROM contacts ORDER BY created_at DESC";
   db.query(sql, (err, result) => {
@@ -9,9 +11,12 @@ router.get("/", (req, res) => {
       console.error("Lỗi truy vấn contacts:", err);
       return res.status(500).json({ error: "Lỗi server" });
     }
-    res.json(result);
+    res.json(result); // Trả kết quả về client
   });
 });
+
+// POST /api/contacts
+// Thêm một liên hệ mới vào CSDL
 router.post("/", (req, res) => {
   const { name, phone, email, occupation, address, landing_code, message } = req.body;
 
@@ -25,8 +30,8 @@ router.post("/", (req, res) => {
       console.error("Lỗi thêm liên hệ:", err);
       return res.status(500).json({ error: "Lỗi server khi lưu liên hệ." });
     }
-    res.json({ message: " ửi liên hệ thành công!" });
+    res.json({ message: "Gửi liên hệ thành công!" }); // ✅ Phản hồi thành công
   });
 });
 
-module.exports = router;
+module.exports = router; // Export route để dùng trong index.js

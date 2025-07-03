@@ -29,7 +29,7 @@ app.post("/api/login", (req, res) => {
       const token = jwt.sign(
         {
           id: user.id,
-          username: user.username, // ✅ đưa vào token
+          username: user.username,
           role: user.role,
         },
         secret,
@@ -39,7 +39,7 @@ app.post("/api/login", (req, res) => {
       res.json({
         token,
         role: user.role,
-        username: user.username, // ✅ gửi về username
+        username: user.username,
       });
     }
   );
