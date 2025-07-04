@@ -6,25 +6,35 @@ const BannerPopup = () => {
   const [show, setShow] = useState(false);
   const [countdown, setCountdown] = useState(0);
 
-  const isAdmin = localStorage.getItem("role") === "admin"; // 👈 Kiểm tra role admin
+  const role = localStorage.getItem("role");
+  const isAdminOrStaff = role === "admin" || role === "staff";
 
+  // Gọi API lấy banner
   const fetchBanner = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/banners/active");
       if (res.data) {
         setBanner(res.data);
-        setCountdown(12 * 60 * 60);
-        localStorage.setItem("banner_last_shown", Date.now().toString());
+        setCountdown(12 * 60 * 60); // 12 tiếng
+        setShow(true);
+        localStorage.setItem("banner_last_shown", Date.now().toString()); // Đánh dấu thời gian hiển thị
       }
     } catch (err) {
       console.error("❌ Không tải được banner:", err);
     }
   };
 
+  // ✅ Chạy khi component mount: chỉ hiện nếu đã qua 1 phút kể từ lần trước
   useEffect(() => {
-    fetchBanner();
+    const lastShown = localStorage.getItem("banner_last_shown");
+    const now = Date.now();
+
+    if (!lastShown || now - parseInt(lastShown) > 60 * 1000) {
+      fetchBanner(); // hiện lại nếu đã qua 1 phút
+    }
   }, []);
 
+  // ⏳ Đếm ngược khi popup đang mở
   useEffect(() => {
     if (show && countdown > 0) {
       const timer = setInterval(() => {
@@ -41,26 +51,23 @@ const BannerPopup = () => {
     return { h, m, s: ss };
   };
 
-  // ⛔ Chưa có banner thì không render popup
-  if (!banner) return null;
-
   const { h, m, s } = formatTime(countdown);
 
   return (
     <>
-      {/* ✅ Nút test hiển thị nếu là admin hoặc staff */}
-      {(isAdmin || localStorage.getItem("role") === "staff") && (
+      {/* ✅ Nút test cho admin hoặc staff */}
+      {isAdminOrStaff && (
         <button
           onClick={() => setShow(true)}
-          className="fixed bottom-5 right-5 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 z-50"
+          className="fixed bottom-5 right-5 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 z-[9999]"
         >
           Test Banner
         </button>
       )}
 
-      {/* ✅ Popup Banner */}
-      {show && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+      {/* ✅ Hiển thị popup nếu có banner và đang setShow(true) */}
+      {banner && show && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[9999]">
           <div className="bg-white rounded-xl w-[90%] max-w-4xl flex overflow-hidden relative shadow-xl">
             {/* Nút đóng */}
             <button
@@ -100,6 +107,7 @@ const BannerPopup = () => {
                 ĐĂNG KÝ NGAY
               </button>
 
+              {/* Đồng hồ đếm ngược */}
               <div className="text-center mt-4">
                 <p className="font-bold">THỜI GIAN KHUYẾN MÃI CÒN</p>
                 <div className="flex justify-center space-x-4 text-white text-xl font-bold mt-2">

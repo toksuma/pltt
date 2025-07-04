@@ -6,31 +6,47 @@ const API_URL = "http://localhost:5000/api/interfaces";
 const AdminInterfaceManager = () => {
   const [interfaces, setInterfaces] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [form, setForm] = useState({ name: "", url: "", category_id: "" });
+  const [form, setForm] = useState({
+    name: "",
+    url: "",
+    category_id: "",
+    preview_image_url: "",
+  });
   const [editId, setEditId] = useState(null);
   const [categoryInput, setCategoryInput] = useState("");
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
 
   useEffect(() => {
     fetchInterfaces();
     fetchCategories();
   }, []);
 
-  // Khi nhập URL, tự gọi backend để lấy preview image
   useEffect(() => {
     const fetchImagePreview = async () => {
       if (!form.url) return;
+      setIsLoadingPreview(true);
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/preview-image?url=${encodeURIComponent(form.url)}`
-        );
+        const res = await axios.get("https://api.linkpreview.net", {
+          params: {
+            key: "c7164167f5678b41646b72cdc83f2a84",
+            q: form.url,
+          },
+        });
         const imageUrl = res.data?.image;
         setImagePreview(imageUrl || "");
+        setForm((prev) => ({
+          ...prev,
+          preview_image_url: imageUrl || "",
+        }));
       } catch (err) {
         console.error("Không lấy được ảnh preview:", err);
         setImagePreview("");
+        setForm((prev) => ({ ...prev, preview_image_url: "" }));
+      } finally {
+        setIsLoadingPreview(false);
       }
     };
 
@@ -49,7 +65,7 @@ const AdminInterfaceManager = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.url || !form.category_id) return;
+    if (!form.name || !form.url || !form.category_id || !form.preview_image_url) return;
 
     if (editId) {
       await axios.put(`${API_URL}/${editId}`, form);
@@ -57,7 +73,7 @@ const AdminInterfaceManager = () => {
       await axios.post(API_URL, form);
     }
 
-    setForm({ name: "", url: "", category_id: "" });
+    setForm({ name: "", url: "", category_id: "", preview_image_url: "" });
     setEditId(null);
     setImagePreview("");
     fetchInterfaces();
@@ -69,7 +85,9 @@ const AdminInterfaceManager = () => {
       name: item.name,
       url: item.url,
       category_id: item.category_id,
+      preview_image_url: item.preview_image_url || "",
     });
+    setImagePreview(item.preview_image_url || "");
     setEditId(item.id);
   };
 
@@ -110,7 +128,6 @@ const AdminInterfaceManager = () => {
 
   return (
     <div className="p-4 flex gap-4 bg-gray-50 min-h-screen">
-      {/* Bảng thể loại bên trái */}
       <div className="w-[250px] bg-white rounded shadow p-4 sticky top-20 h-fit">
         <h2 className="text-lg font-semibold mb-2">Hạng mục</h2>
         <ul className="space-y-1 text-sm">
@@ -127,9 +144,7 @@ const AdminInterfaceManager = () => {
               <span
                 onClick={() => setSelectedCategoryId(cat.id)}
                 className={`flex-1 px-2 py-1 rounded cursor-pointer ${
-                  selectedCategoryId === cat.id
-                    ? "bg-blue-100 font-medium"
-                    : ""
+                  selectedCategoryId === cat.id ? "bg-blue-100 font-medium" : ""
                 }`}
               >
                 {editingCategoryId === cat.id ? (
@@ -150,18 +165,8 @@ const AdminInterfaceManager = () => {
                   `${cat.name} (${cat.count})`
                 )}
               </span>
-              <button
-                onClick={() => setEditingCategoryId(cat.id)}
-                className="text-xs text-blue-500"
-              >
-                ✎
-              </button>
-              <button
-                onClick={() => handleDeleteCategory(cat.id)}
-                className="text-xs text-red-500 ml-1"
-              >
-                ✖
-              </button>
+              <button onClick={() => setEditingCategoryId(cat.id)} className="text-xs text-blue-500">✎</button>
+              <button onClick={() => handleDeleteCategory(cat.id)} className="text-xs text-red-500 ml-1">✖</button>
             </li>
           ))}
         </ul>
@@ -182,26 +187,17 @@ const AdminInterfaceManager = () => {
         </div>
       </div>
 
-      {/* Nội dung bên phải */}
       <div className="flex-1">
-        <h1 className="text-xl font-bold mb-4 uppercase">
-          MẪU GIAO DIỆN LANDING PAGE
-        </h1>
+        <h1 className="text-xl font-bold mb-4 uppercase">MẪU GIAO DIỆN LANDING PAGE</h1>
 
-        {/* Form nhập */}
-        <form
-          onSubmit={handleFormSubmit}
-          className="bg-white p-4 rounded shadow mb-6"
-        >
+        <form onSubmit={handleFormSubmit} className="bg-white p-4 rounded shadow mb-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium">Tên giao diện</label>
               <input
                 type="text"
                 value={form.name}
-                onChange={(e) =>
-                  setForm({ ...form, name: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full px-2 py-1 border rounded"
                 required
               />
@@ -211,10 +207,7 @@ const AdminInterfaceManager = () => {
               <input
                 type="url"
                 value={form.url}
-                onChange={(e) => {
-                  const url = e.target.value;
-                  setForm({ ...form, url });
-                }}
+                onChange={(e) => setForm({ ...form, url: e.target.value })}
                 className="w-full px-2 py-1 border rounded"
                 required
               />
@@ -231,41 +224,32 @@ const AdminInterfaceManager = () => {
               <label className="block text-sm font-medium">Thể loại</label>
               <select
                 value={form.category_id}
-                onChange={(e) =>
-                  setForm({ ...form, category_id: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, category_id: e.target.value })}
                 className="w-full px-2 py-1 border rounded"
                 required
               >
                 <option value="">-- Chọn thể loại --</option>
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
                 ))}
               </select>
             </div>
           </div>
           <button
             type="submit"
-            className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+            disabled={!form.preview_image_url || isLoadingPreview}
           >
             {editId ? "Cập nhật" : "Thêm mới"}
           </button>
         </form>
 
-        {/* Danh sách giao diện */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
           {interfacesByCategory.map((item) => (
-            <div
-              key={item.id}
-              className="border bg-white rounded shadow p-2 flex flex-col"
-            >
-              <div className="font-semibold text-sm mb-1">
-                {item.name} (#{item.code})
-              </div>
+            <div key={item.id} className="border bg-white rounded shadow p-2 flex flex-col">
+              <div className="font-semibold text-sm mb-1">{item.name} (#{item.code})</div>
               <img
-                src={`http://localhost:5000/api/preview-image?url=${encodeURIComponent(item.url)}`}
+                src={item.preview_image_url}
                 alt={item.name}
                 className="h-36 object-cover rounded mb-2 border"
                 onError={(e) => (e.target.src = "/fallback.jpg")}
@@ -282,18 +266,8 @@ const AdminInterfaceManager = () => {
                 >
                   Xem chi tiết
                 </a>
-                <button
-                  onClick={() => handleEdit(item)}
-                  className="text-yellow-600"
-                >
-                  Sửa
-                </button>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="text-red-600"
-                >
-                  Xoá
-                </button>
+                <button onClick={() => handleEdit(item)} className="text-yellow-600">Sửa</button>
+                <button onClick={() => handleDelete(item.id)} className="text-red-600">Xoá</button>
               </div>
             </div>
           ))}
