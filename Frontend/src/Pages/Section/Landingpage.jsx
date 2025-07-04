@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+{/* cho các nút hiệu ứng */}
 const Landingpage = () => (
   <div
     className="bg-cover bg-center min-h-screen py-16 flex items-center justify-start"
@@ -7,7 +7,7 @@ const Landingpage = () => (
   >
     <div className="max-w-6xl w-full px-6 text-white text-left">
       <h1 className="text-4xl md:text-5xl font-bold mb-4">
-        DỊCH VỤ THIẾT KẾ WEB LANDING PAGE CHUYÊN NGHIỆP123
+        DỊCH VỤ THIẾT KẾ WEB LANDING PAGE CHUYÊN NGHIỆP
       </h1>
       <h2 className="text-lg md:text-xl font-medium mb-6 max-w-3xl">
         Chuyên thiết kế web Landing Page giới thiệu sản phẩm dịch vụ giúp bán hàng online hiệu quả và tiết kiệm chi phí nhất.

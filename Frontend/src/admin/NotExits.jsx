@@ -11,10 +11,10 @@ const Unauthorized = () => {
           className="w-44 mx-auto mb-6 rounded border border-[#D9BFB7]"
         />
 
-        <h1 className="text-xl font-bold text-[#34345C] mb-4">403 - Không có quyền truy cập</h1>
+        <h1 className="text-xl font-bold text-[#34345C] mb-4">404 - Trang Không Tồn Tại</h1>
 
         <blockquote className="border-l-4 border-[#789922] pl-4 text-[#789922] italic mb-4 text-left">
-          Truy cập bị từ chối. Tài khoản của bạn không đủ quyền để vào trang này.
+          Hiện tại trang không tồn tại hoặc đang trong quá trình bảo trì.
         </blockquote>
 
         <p className="text-[#222] mb-6 text-left">

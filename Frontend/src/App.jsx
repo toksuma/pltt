@@ -2,7 +2,8 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 
 import AdminArticleManager from './admin/AdminArticleManager';  
 import AdminBannerManager from './admin/AdminBannerManager';  
-import AdminInterfaceManager from './admin/AdminInterfaceManager'; // ✅ THÊM DÒNG NÀY
+import AdminInterfaceManager from './admin/AdminInterfaceManager';
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingButtons from './components/AddOn';
@@ -25,7 +26,8 @@ import BannerPopup from './components/BannerPopup';
 import AdminLogin from "./Pages/Main/AdminLogin";
 
 import ProtectedRoute from './components/ProtectedRoute';
-import Unauthorized from './admin/Unauthorized';
+import Unauthorized from './admin/Unauthorized'; 
+import NotExits from './admin/NotExits'; // ✅ Sử dụng trang 404 mới
 
 function AppContent() {
   const location = useLocation();
@@ -65,10 +67,13 @@ function AppContent() {
             <Route path="articles" element={<AdminArticleManager />} />
             <Route path="contacts" element={<ContactManager />} />
             <Route path="banners" element={<AdminBannerManager />} />
-            <Route path="interfaces" element={<AdminInterfaceManager />} /> {/* ✅ THÊM DÒNG NÀY */}
+            <Route path="interfaces" element={<AdminInterfaceManager />} />
           </Route>
 
           <Route path="/admin/unauthorized" element={<Unauthorized />} />
+
+          {/* ✅ Trang 404 - sử dụng NotExits */}
+          <Route path="*" element={<NotExits />} />
         </Routes>
       </main>
 

@@ -17,7 +17,7 @@ function Header() {
         {/* Logo */}
         <div className="flex items-center space-x-4 pr-8">
           <img src="/Logo.png" alt="Logo" className="h-10 w-auto" />
-          <span className="text-white text-3xl font-semibold">TungPageV7</span>
+          <span className="text-white text-3xl font-semibold">TungPageV8</span>
         </div>
         {/* Menu */}
         <nav className="hidden md:flex space-x-6">
