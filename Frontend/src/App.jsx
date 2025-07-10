@@ -26,7 +26,7 @@ import BannerPopup from './components/BannerPopup';
 import AdminLogin from "./Pages/Main/AdminLogin";
 
 import ProtectedRoute from './components/ProtectedRoute';
-import Unauthorized from './admin/Unauthorized'; 
+//import Unauthorized from './admin/Unauthorized'; 
 import NotExits from './admin/NotExits'; // ✅ Sử dụng trang 404 mới
 
 function AppContent() {
