@@ -1,18 +1,19 @@
+// db.js
 const mysql = require("mysql2");
 
-const db = mysql.createConnection({
+const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "admin", 
-  database: "pltt_news", 
+  password: "",         // Nếu bạn đặt mật khẩu thì điền vào đây
+  database: "pltt_news" // Tên đúng của database
 });
 
-db.connect((err) => {
+connection.connect((err) => {
   if (err) {
-    console.error("Lỗi kết nối CSDL:", err);
+    console.error("❌ Kết nối MySQL thất bại:", err.message);
   } else {
-    console.log("Đã kết nối CSDL");
+    console.log("✅ Kết nối MySQL thành công!");
   }
 });
 
-module.exports = db;
+module.exports = connection;
