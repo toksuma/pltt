@@ -1,134 +1,103 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { removeVietnameseTones } from "../../utils/removeVietnameseTones";
+const express = require("express");
+const router = express.Router();
+const db = require("../db");
 
-const InterfaceList = () => {
-  const [interfaces, setInterfaces] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    const [interfaceRes, categoryRes] = await Promise.all([
-      axios.get("http://localhost:5000/api/interfaces"),
-      axios.get("http://localhost:5000/api/interfaces/categories"),
-    ]);
-    setInterfaces(interfaceRes.data);
-    setFiltered(interfaceRes.data);
-    setCategories(categoryRes.data);
-  };
-
-  useEffect(() => {
-    let result = [...interfaces];
-    const searchTerm = removeVietnameseTones(search.trim().toLowerCase());
-
-    if (searchTerm) {
-      result = result.filter(
-        (item) =>
-          removeVietnameseTones(item.name.toLowerCase()).includes(searchTerm) ||
-          removeVietnameseTones(String(item.code).toLowerCase()).includes(searchTerm)
-      );
-    }
-
-    if (selectedCategory) {
-      result = result.filter(
-        (item) => item.category_id === parseInt(selectedCategory)
-      );
-    }
-
-    setFiltered(result);
-  }, [search, selectedCategory, interfaces]);
-
-  const generateFormattedCode = (item) => {
-    if (!item.category_name) return item.code;
-    const initials = removeVietnameseTones(item.category_name)
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase();
-    return `${initials}${String(item.code).padStart(2, "0")}`;
-  };
-
-  return (
-    <div className="p-6 bg-gradient-to-br from-gray-100 to-blue-50 min-h-screen">
-      <h1 className="text-3xl font-extrabold mb-6 text-center text-blue-700 uppercase tracking-wide">
-        MẪU GIAO DIỆN LANDING PAGE
-      </h1>
-
-      {/* Tìm kiếm + danh mục */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 max-w-4xl mx-auto">
-        <input
-          type="text"
-          placeholder="Tìm theo ID hoặc tên..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border border-gray-300 p-3 rounded-lg shadow w-full sm:w-1/2"
-        />
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="border border-gray-300 p-3 rounded-lg shadow w-full sm:w-1/2"
-        >
-          <option value="">Tất cả chủ đề</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name} ({cat.count} mục)
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Giao diện */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {filtered.map((item) => (
-          <div
-            key={item.id}
-            className="rounded-3xl overflow-hidden shadow-lg bg-white hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] border border-gray-200 group"
-          >
-            <div className="relative">
-              <img
-                src={item.preview_image_url || "/fallback.jpg"}
-                alt={item.name}
-                className="w-full h-52 object-cover transition duration-300 group-hover:brightness-105"
-                onError={(e) => (e.target.src = "/fallback.jpg")}
-              />
-            </div>
-
-            <div className="p-4 text-center">
-              <h3 className="text-lg font-bold text-gray-800 mb-1 truncate">
-                {item.name}
-              </h3>
-              <p className="text-indigo-700 italic text-base mb-2">
-                Mã: {generateFormattedCode(item)}
-              </p>
-              <p className="text-sm text-gray-600 mb-3">
-                Chủ đề: {item.category_name || "Không rõ"}
-              </p>
-              <a
-                href={item.url}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-block bg-blue-600 text-white text-sm px-5 py-2 rounded-full hover:bg-blue-700 transition font-medium"
-              >
-                Xem chi tiết
-              </a>
-            </div>
-          </div>
-        ))}
-
-        {filtered.length === 0 && (
-          <p className="text-gray-500 col-span-full text-center text-lg">
-            Không có giao diện phù hợp.
-          </p>
-        )}
-      </div>
-    </div>
-  );
+// 🔹 Tạo mã giao diện tự động
+const getNextCode = (callback) => {
+  db.query("SELECT MAX(CAST(code AS UNSIGNED)) AS maxCode FROM interfaces", (err, result) => {
+    if (err) return callback(err);
+    const next = result[0].maxCode ? result[0].maxCode + 1 : 1;
+    callback(null, String(next));
+  });
 };
 
-export default InterfaceList;
+// 🔸 Lấy tất cả giao diện
+router.get("/", (req, res) => {
+  const sql = `
+    SELECT interfaces.*, interface_categories.name AS category_name
+    FROM interfaces
+    LEFT JOIN interface_categories ON interfaces.category_id = interface_categories.id
+    ORDER BY interfaces.id DESC
+  `;
+  db.query(sql, (err, result) => {
+    if (err) return res.status(500).json({ error: "Lỗi khi lấy dữ liệu" });
+    res.json(result);
+  });
+});
+
+// 🔸 Thêm giao diện
+router.post("/", (req, res) => {
+  const { name, url, category_id } = req.body;
+  getNextCode((err, nextCode) => {
+    if (err) return res.status(500).json({ error: "Lỗi tạo mã" });
+
+    const sql = "INSERT INTO interfaces (name, url, category_id, code) VALUES (?, ?, ?, ?)";
+    db.query(sql, [name, url, category_id, nextCode], (err, result) => {
+      if (err) return res.status(500).json({ error: "Lỗi thêm giao diện" });
+      res.json({ message: "Thành công", id: result.insertId });
+    });
+  });
+});
+
+// 🔸 Cập nhật giao diện
+router.put("/:id", (req, res) => {
+  const { name, url, category_id } = req.body;
+  const { id } = req.params;
+  const sql = "UPDATE interfaces SET name=?, url=?, category_id=? WHERE id=?";
+  db.query(sql, [name, url, category_id, id], (err) => {
+    if (err) return res.status(500).json({ error: "Lỗi cập nhật" });
+    res.json({ message: "Đã cập nhật" });
+  });
+});
+
+// 🔸 Xoá giao diện
+router.delete("/:id", (req, res) => {
+  const sql = "DELETE FROM interfaces WHERE id=?";
+  db.query(sql, [req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: "Lỗi xoá" });
+    res.json({ message: "Đã xoá" });
+  });
+});
+
+// 🔸 Lấy tất cả thể loại + đếm
+router.get("/categories", (req, res) => {
+  const sql = `
+    SELECT c.*, COUNT(i.id) AS count
+    FROM interface_categories c
+    LEFT JOIN interfaces i ON i.category_id = c.id
+    GROUP BY c.id
+    ORDER BY c.id DESC
+  `;
+  db.query(sql, (err, result) => {
+    if (err) return res.status(500).json({ error: "Lỗi khi lấy thể loại" });
+    res.json(result);
+  });
+});
+
+// Thêm thể loại
+router.post("/categories", (req, res) => {
+  const { name } = req.body;
+  db.query("INSERT INTO interface_categories (name) VALUES (?)", [name], (err, result) => {
+    if (err) return res.status(500).json({ error: "Lỗi thêm thể loại" });
+    res.json({ id: result.insertId });
+  });
+});
+
+// Sửa thể loại
+router.put("/categories/:id", (req, res) => {
+  const { name } = req.body;
+  db.query("UPDATE interface_categories SET name=? WHERE id=?", [name, req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: "Lỗi cập nhật thể loại" });
+    res.json({ message: "Đã cập nhật" });
+  });
+});
+
+//  Xoá thể loại
+router.delete("/categories/:id", (req, res) => {
+  db.query("DELETE FROM interface_categories WHERE id=?", [req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: "Lỗi xoá thể loại" });
+    res.json({ message: "Đã xoá" });
+  });
+});
+
+module.exports = router;
