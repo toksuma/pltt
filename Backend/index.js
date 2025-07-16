@@ -31,6 +31,9 @@ app.use("/api/preview-image", previewImageRoute);
 // Login URL: http://localhost:5000/api/login
 app.use("/api", require("./routes/auth"));
 
+// Profile: Quản lý thông tin cá nhân
+app.use("/api/profile", require("./routes/profile"));
+
 // Test route phân quyền: chỉ Admin được truy cập
 app.get("/api/admin-only", authenticate, authorize("admin"), (req, res) => {
   res.json({ message: "Chỉ Admin mới thấy được" });

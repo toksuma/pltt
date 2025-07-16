@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import AdminArticleManager from './admin/AdminArticleManager';  
 import AdminBannerManager from './admin/AdminBannerManager';  
 import AdminInterfaceManager from './admin/AdminInterfaceManager';
+import UserProfile from './admin/UserProfile';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -26,7 +27,7 @@ import BannerPopup from './components/BannerPopup';
 import AdminLogin from "./Pages/Main/AdminLogin";
 
 import ProtectedRoute from './components/ProtectedRoute';
-import Unauthorized from './admin/Unauthorized'; 
+import Unauthorized from './admin/unauthorized'; 
 import NotExits from './admin/NotExits'; // ✅ Sử dụng trang 404 mới
 
 function AppContent() {
@@ -68,6 +69,7 @@ function AppContent() {
             <Route path="contacts" element={<ContactManager />} />
             <Route path="banners" element={<AdminBannerManager />} />
             <Route path="interfaces" element={<AdminInterfaceManager />} />
+            <Route path="profile" element={<UserProfile />} />
           </Route>
 
           <Route path="/admin/unauthorized" element={<Unauthorized />} />
