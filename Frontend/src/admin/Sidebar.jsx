@@ -7,6 +7,7 @@ import {
   FaImage,
   FaSignOutAlt,
   FaCogs, // ✅ THÊM ICON
+  FaUser, // ✅ THÊM ICON CHO PROFILE
 } from "react-icons/fa";
 
 const Sidebar = ({ isOpen }) => {
@@ -113,6 +114,17 @@ const Sidebar = ({ isOpen }) => {
           >
             <FaCogs />
             <span>Quản lý giao diện</span>
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/admin/profile"
+            className={`flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 ${
+              isActive("/admin/profile") ? "bg-gray-700" : ""
+            }`}
+          >
+            <FaUser />
+            <span>Thông tin cá nhân</span>
           </Link>
         </li>
       </ul>
