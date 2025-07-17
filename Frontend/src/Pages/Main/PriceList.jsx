@@ -63,14 +63,16 @@ const plans = [
 function PlanCard({ plan }) {
   return (
     <div
-      className={`${plan.bgColor} p-6 rounded-xl shadow-lg text-center w-full max-w-[8cm]`}
+      className={`${plan.bgColor} p-8 rounded-2xl shadow-xl text-center w-full max-w-md transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl`}
     >
-      <h2 className="text-4xl font-bold mb-2">{plan.price}</h2>
-      <h3 className={`text-xl font-semibold mb-4 ${plan.titleColor}`}>
+      <h2 className="text-5xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500">
+        {plan.price}K
+      </h2>
+      <h3 className={`text-2xl font-bold mb-4 uppercase tracking-tight ${plan.titleColor}`}>
         {plan.title}
       </h3>
-      <hr className="border-gray-400 mb-4" />
-      <p className="text-sm mb-6">{plan.description}</p>
+      <hr className="border-gray-300 mb-4" />
+      <p className="text-base mb-6 text-gray-700">{plan.description}</p>
       <ul className="text-left space-y-3 mb-6">
         {plan.features.map((feature, i) => (
           <li
@@ -88,7 +90,7 @@ function PlanCard({ plan }) {
           </li>
         ))}
       </ul>
-      <button className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">
+      <button className="bg-gradient-to-r from-[#fa4d3e] to-[#fd9374] text-white px-8 py-2 rounded-full font-semibold shadow hover:from-[#e62d2d] hover:to-[#f67070] transition-all duration-300 transform hover:scale-105">
         Đăng ký ngay
       </button>
     </div>
@@ -97,22 +99,22 @@ function PlanCard({ plan }) {
 
 export default function PriceList() {
   return (
-    <section className="bg-white py-16 px-[3cm]">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-red-600 mb-4">
+    <section className="bg-gradient-to-br from-white via-pink-50 to-blue-50 py-16 px-4 sm:px-10 lg:px-32">
+      <div className="text-center mb-14">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-transparent mb-4 bg-clip-text bg-gradient-to-r from-[#fa4d3e] via-[#fd9374] to-[#fd71b3] tracking-tight drop-shadow-lg uppercase">
           BẢNG GIÁ DỊCH VỤ LANDING PAGE
         </h1>
-        <h2 className="text-xl font-medium text-black">
+        <h2 className="text-xl font-medium text-gray-700">
           Chính sách bảng giá dịch vụ LANDING PAGE tại{" "}
           <span className="text-blue-600 font-bold">TÙNG MEDIA!</span>
         </h2>
       </div>
-      <div className="flex flex-col md:flex-row justify-center items-start gap-[1cm]">
+      <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 md:gap-12">
         {plans.map((plan, idx) => (
           <PlanCard key={idx} plan={plan} />
         ))}
       </div>
-      <div className="mt-12 text-gray-700 leading-relaxed max-w-4xl mx-auto text-justify">
+      <div className="mt-14 text-gray-700 leading-relaxed max-w-4xl mx-auto text-justify bg-white/70 rounded-xl p-8 shadow">
         <p className="mb-4">
           Chính sách <strong>BẢNG GIÁ DỊCH VỤ LANDING PAGE</strong> được{" "}
           <strong>CCO MEDIA</strong> đưa ra với nhiều mức gói khác nhau giúp

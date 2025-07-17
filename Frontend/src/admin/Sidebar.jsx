@@ -6,7 +6,8 @@ import {
   FaEnvelope,
   FaImage,
   FaSignOutAlt,
-  FaCogs, // ✅ THÊM ICON
+  FaCogs,
+  FaUsers,
 } from "react-icons/fa";
 
 const Sidebar = ({ isOpen }) => {
@@ -44,15 +45,15 @@ const Sidebar = ({ isOpen }) => {
 
   return (
     <div
-      className={`fixed left-0 z-40 bg-gray-900 text-white w-[250px] flex flex-col transition-transform duration-300 ease-in-out shadow-xl ${
+      className={`fixed left-0 z-40 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white w-[250px] flex flex-col transition-transform duration-300 ease-in-out shadow-xl ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
       style={{ top: topValue, height: heightValue }}
     >
       <div className="p-4 border-b border-gray-700">
-        <h3 className="text-lg font-bold">QUẢN TRỊ WEBSITE</h3>
-        <p className="text-sm text-gray-400">TungPageV7</p>
-        <p className="text-sm text-green-400 mt-2">
+        <h3 className="text-lg font-extrabold tracking-wider">QUẢN TRỊ WEBSITE</h3>
+        <p className="text-sm text-pink-300 font-semibold">TungPageV7</p>
+        <p className="text-xs text-green-400 mt-2 font-medium">
           👤 Tài khoản: {username}
         </p>
       </div>
@@ -62,8 +63,10 @@ const Sidebar = ({ isOpen }) => {
           <li>
             <Link
               to="/admin/dashboard"
-              className={`flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 ${
-                isActive("/admin/dashboard") ? "bg-gray-700" : ""
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${
+                isActive("/admin/dashboard")
+                  ? "bg-gradient-to-r from-pink-500 via-red-400 to-orange-300 text-white shadow"
+                  : "hover:bg-gray-700"
               }`}
             >
               <FaChartBar />
@@ -71,11 +74,28 @@ const Sidebar = ({ isOpen }) => {
             </Link>
           </li>
         )}
+        {role === "admin" && (
+          <li>
+            <Link
+              to="/admin/users"
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${
+                isActive("/admin/users")
+                  ? "bg-gradient-to-r from-pink-500 via-red-400 to-orange-300 text-white shadow"
+                  : "hover:bg-gray-700"
+              }`}
+            >
+              <FaUsers />
+              <span>Quản lý người dùng</span>
+            </Link>
+          </li>
+        )}
         <li>
           <Link
             to="/admin/articles"
-            className={`flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 ${
-              isActive("/admin/articles") ? "bg-gray-700" : ""
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${
+              isActive("/admin/articles")
+                ? "bg-gradient-to-r from-pink-500 via-red-400 to-orange-300 text-white shadow"
+                : "hover:bg-gray-700"
             }`}
           >
             <FaNewspaper />
@@ -85,8 +105,10 @@ const Sidebar = ({ isOpen }) => {
         <li>
           <Link
             to="/admin/contacts"
-            className={`flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 ${
-              isActive("/admin/contacts") ? "bg-gray-700" : ""
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${
+              isActive("/admin/contacts")
+                ? "bg-gradient-to-r from-pink-500 via-red-400 to-orange-300 text-white shadow"
+                : "hover:bg-gray-700"
             }`}
           >
             <FaEnvelope />
@@ -96,8 +118,10 @@ const Sidebar = ({ isOpen }) => {
         <li>
           <Link
             to="/admin/banners"
-            className={`flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 ${
-              isActive("/admin/banners") ? "bg-gray-700" : ""
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${
+              isActive("/admin/banners")
+                ? "bg-gradient-to-r from-pink-500 via-red-400 to-orange-300 text-white shadow"
+                : "hover:bg-gray-700"
             }`}
           >
             <FaImage />
@@ -107,8 +131,10 @@ const Sidebar = ({ isOpen }) => {
         <li>
           <Link
             to="/admin/interfaces"
-            className={`flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 ${
-              isActive("/admin/interfaces") ? "bg-gray-700" : ""
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${
+              isActive("/admin/interfaces")
+                ? "bg-gradient-to-r from-pink-500 via-red-400 to-orange-300 text-white shadow"
+                : "hover:bg-gray-700"
             }`}
           >
             <FaCogs />
@@ -120,7 +146,7 @@ const Sidebar = ({ isOpen }) => {
       <div className="p-4 border-t border-gray-700 text-center">
         <button
           onClick={handleLogout}
-          className="text-red-400 hover:text-red-300 font-medium text-sm"
+          className="text-red-400 hover:text-red-300 font-semibold text-sm transition"
         >
           <FaSignOutAlt className="inline-block mr-1" />
           Đăng xuất
@@ -131,4 +157,3 @@ const Sidebar = ({ isOpen }) => {
 };
 
 export default Sidebar;
-  

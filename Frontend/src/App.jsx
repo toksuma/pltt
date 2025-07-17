@@ -18,6 +18,7 @@ import PriceList from './Pages/Main/PriceList';
 import Services from './Pages/Main/Services';
 import Collab from './Pages/Main/Collab';
 import Login from './Pages/Main/Login';
+import AdminUserManager from "./admin/User";
 
 import AdminLayout from './admin/AdminLayout';
 import Dashboard from './admin/Dashboard';
@@ -68,6 +69,7 @@ function AppContent() {
             <Route path="contacts" element={<ContactManager />} />
             <Route path="banners" element={<AdminBannerManager />} />
             <Route path="interfaces" element={<AdminInterfaceManager />} />
+            <Route path="users" element={<AdminUserManager />} />
           </Route>
 
           <Route path="/admin/unauthorized" element={<Unauthorized />} />

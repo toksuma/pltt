@@ -42,7 +42,6 @@ const AdminInterfaceManager = () => {
           preview_image_url: imageUrl || "",
         }));
       } catch (err) {
-        console.error("Không lấy được ảnh preview:", err);
         setImagePreview("");
         setForm((prev) => ({ ...prev, preview_image_url: "" }));
       } finally {
@@ -51,6 +50,7 @@ const AdminInterfaceManager = () => {
     };
 
     fetchImagePreview();
+    // eslint-disable-next-line
   }, [form.url]);
 
   const fetchInterfaces = async () => {
@@ -127,13 +127,14 @@ const AdminInterfaceManager = () => {
     : interfaces;
 
   return (
-    <div className="p-4 flex gap-4 bg-gray-50 min-h-screen">
-      <div className="w-[250px] bg-white rounded shadow p-4 sticky top-20 h-fit">
-        <h2 className="text-lg font-semibold mb-2">Hạng mục</h2>
+    <div className="p-6 flex gap-6 bg-gradient-to-tr from-gray-100 via-blue-50 to-cyan-50 min-h-screen">
+      {/* Sidebar Categories */}
+      <div className="w-[260px] bg-white rounded-2xl shadow-md p-4 sticky top-20 h-fit border border-gray-100">
+        <h2 className="text-lg font-semibold mb-2 text-blue-800">Hạng mục</h2>
         <ul className="space-y-1 text-sm">
           <li
-            className={`cursor-pointer px-2 py-1 rounded ${
-              selectedCategoryId === null ? "bg-blue-100 font-medium" : ""
+            className={`cursor-pointer px-2 py-1 rounded font-medium ${
+              selectedCategoryId === null ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-50"
             }`}
             onClick={() => setSelectedCategoryId(null)}
           >
@@ -143,8 +144,10 @@ const AdminInterfaceManager = () => {
             <li key={cat.id} className="flex items-center justify-between">
               <span
                 onClick={() => setSelectedCategoryId(cat.id)}
-                className={`flex-1 px-2 py-1 rounded cursor-pointer ${
-                  selectedCategoryId === cat.id ? "bg-blue-100 font-medium" : ""
+                className={`flex-1 px-2 py-1 rounded cursor-pointer transition ${
+                  selectedCategoryId === cat.id
+                    ? "bg-blue-100 text-blue-700 font-semibold"
+                    : "text-gray-700 hover:bg-gray-50"
                 }`}
               >
                 {editingCategoryId === cat.id ? (
@@ -165,8 +168,20 @@ const AdminInterfaceManager = () => {
                   `${cat.name} (${cat.count})`
                 )}
               </span>
-              <button onClick={() => setEditingCategoryId(cat.id)} className="text-xs text-blue-500">✎</button>
-              <button onClick={() => handleDeleteCategory(cat.id)} className="text-xs text-red-500 ml-1">✖</button>
+              <button
+                onClick={() => setEditingCategoryId(cat.id)}
+                className="text-xs text-blue-500 px-1"
+                title="Sửa tên"
+              >
+                ✎
+              </button>
+              <button
+                onClick={() => handleDeleteCategory(cat.id)}
+                className="text-xs text-red-500 ml-1 px-1"
+                title="Xoá"
+              >
+                ✖
+              </button>
             </li>
           ))}
         </ul>
@@ -180,20 +195,22 @@ const AdminInterfaceManager = () => {
           />
           <button
             onClick={handleAddCategory}
-            className="mt-2 bg-blue-500 text-white w-full py-1 text-sm rounded"
+            className="mt-2 bg-blue-600 hover:bg-blue-700 text-white w-full py-1 text-sm rounded"
           >
             Thêm hạng mục
           </button>
         </div>
       </div>
-
+      {/* Main Content */}
       <div className="flex-1">
-        <h1 className="text-xl font-bold mb-4 uppercase">MẪU GIAO DIỆN LANDING PAGE</h1>
-
-        <form onSubmit={handleFormSubmit} className="bg-white p-4 rounded shadow mb-6">
+        <h1 className="text-2xl font-bold mb-5 uppercase text-blue-900 tracking-tight">
+          MẪU GIAO DIỆN LANDING PAGE
+        </h1>
+        {/* Form */}
+        <form onSubmit={handleFormSubmit} className="bg-white p-5 rounded-2xl shadow-md mb-7 border border-gray-100">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium">Tên giao diện</label>
+              <label className="block text-sm font-medium mb-1 text-gray-700">Tên giao diện</label>
               <input
                 type="text"
                 value={form.name}
@@ -203,7 +220,7 @@ const AdminInterfaceManager = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">URL trang</label>
+              <label className="block text-sm font-medium mb-1 text-gray-700">URL trang</label>
               <input
                 type="url"
                 value={form.url}
@@ -215,13 +232,13 @@ const AdminInterfaceManager = () => {
                 <img
                   src={imagePreview}
                   alt="preview"
-                  className="mt-2 h-32 object-cover border rounded"
+                  className="mt-2 h-32 object-cover border rounded shadow"
                   onError={(e) => (e.target.src = "/fallback.jpg")}
                 />
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium">Thể loại</label>
+              <label className="block text-sm font-medium mb-1 text-gray-700">Thể loại</label>
               <select
                 value={form.category_id}
                 onChange={(e) => setForm({ ...form, category_id: e.target.value })}
@@ -237,25 +254,25 @@ const AdminInterfaceManager = () => {
           </div>
           <button
             type="submit"
-            className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+            className="mt-5 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded transition disabled:opacity-50"
             disabled={!form.preview_image_url || isLoadingPreview}
           >
             {editId ? "Cập nhật" : "Thêm mới"}
           </button>
         </form>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+        {/* Grid of interfaces */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
           {interfacesByCategory.map((item) => (
-            <div key={item.id} className="border bg-white rounded shadow p-2 flex flex-col">
-              <div className="font-semibold text-sm mb-1">{item.name} (#{item.code})</div>
+            <div key={item.id} className="border border-gray-100 bg-white rounded-2xl shadow p-3 flex flex-col hover:shadow-lg transition">
+              <div className="font-semibold text-base mb-1 text-gray-900">{item.name} <span className="text-xs text-gray-500">#{item.code}</span></div>
               <img
                 src={item.preview_image_url}
                 alt={item.name}
                 className="h-36 object-cover rounded mb-2 border"
                 onError={(e) => (e.target.src = "/fallback.jpg")}
               />
-              <div className="text-sm text-gray-600 mb-1">
-                Thể loại: {item.category_name || "Chưa rõ"}
+              <div className="text-sm text-gray-700 mb-1">
+                Thể loại: <span className="font-medium text-blue-700">{item.category_name || "Chưa rõ"}</span>
               </div>
               <div className="flex gap-2 mt-auto text-sm">
                 <a
@@ -266,11 +283,24 @@ const AdminInterfaceManager = () => {
                 >
                   Xem chi tiết
                 </a>
-                <button onClick={() => handleEdit(item)} className="text-yellow-600">Sửa</button>
-                <button onClick={() => handleDelete(item.id)} className="text-red-600">Xoá</button>
+                <button
+                  onClick={() => handleEdit(item)}
+                  className="text-yellow-600 hover:underline"
+                >
+                  Sửa
+                </button>
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="text-red-600 hover:underline"
+                >
+                  Xoá
+                </button>
               </div>
             </div>
           ))}
+          {interfacesByCategory.length === 0 && (
+            <div className="col-span-full text-center text-gray-400 py-10">Không có giao diện nào trong mục này.</div>
+          )}
         </div>
       </div>
     </div>
