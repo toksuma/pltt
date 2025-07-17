@@ -23,6 +23,9 @@ app.use("/api/contacts", require("./routes/contacts"));
 app.use("/api/articles", require("./routes/articles"));
 app.use("/api/interfaces", require("./routes/interfaces"));
 
+// Users management routes (with authentication)
+app.use("/api/users", authenticate, require("./routes/users"));
+
 // Route lấy ảnh preview từ URL (crawl bằng cheerio)
 const previewImageRoute = require("./routes/previewImage");
 app.use("/api/preview-image", previewImageRoute);

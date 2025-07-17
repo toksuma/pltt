@@ -19,6 +19,7 @@ import Services from './Pages/Main/Services';
 import Collab from './Pages/Main/Collab';
 import Login from './Pages/Main/Login';
 import AdminUserManager from "./admin/User";
+import Profile from './Pages/Profile';
 
 import AdminLayout from './admin/AdminLayout';
 import Dashboard from './admin/Dashboard';
@@ -51,6 +52,13 @@ function AppContent() {
           <Route path="/Collab" element={<Collab />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          
+          {/* Profile route - accessible to all authenticated users */}
+          <Route path="/profile" element={
+            <ProtectedRoute allowedRoles={["admin", "staff"]}>
+              <Profile />
+            </ProtectedRoute>
+          } />
 
           <Route
             path="/admin"
