@@ -23,6 +23,10 @@ app.use("/api/contacts", require("./routes/contacts"));
 app.use("/api/articles", require("./routes/articles"));
 app.use("/api/interfaces", require("./routes/interfaces"));
 
+// Users management routes (with authentication)
+const usersRouter = require("./routes/users");
+app.use("/api/users", usersRouter);
+
 // Route lấy ảnh preview từ URL (crawl bằng cheerio)
 const previewImageRoute = require("./routes/previewImage");
 app.use("/api/preview-image", previewImageRoute);

@@ -8,6 +8,7 @@ import {
   FaSignOutAlt,
   FaCogs,
   FaUsers,
+  FaUserCircle,
 } from "react-icons/fa";
 
 const Sidebar = ({ isOpen }) => {
@@ -59,6 +60,21 @@ const Sidebar = ({ isOpen }) => {
       </div>
 
       <ul className="mt-4 space-y-2 px-4 flex-1">
+        {/* Profile - accessible to all users */}
+        <li>
+          <Link
+            to="/admin/profile"
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${
+              isActive("/profile")
+                ? "bg-gradient-to-r from-pink-500 via-red-400 to-orange-300 text-white shadow"
+                : "hover:bg-gray-700"
+            }`}
+          >
+            <FaUserCircle />
+            <span>Thông tin cá nhân</span>
+          </Link>
+        </li>
+        
         {role === "admin" && (
           <li>
             <Link

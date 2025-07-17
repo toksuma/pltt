@@ -19,6 +19,7 @@ import Services from './Pages/Main/Services';
 import Collab from './Pages/Main/Collab';
 import Login from './Pages/Main/Login';
 import AdminUserManager from "./admin/User";
+import Profile from './admin/Profile'; 
 
 import AdminLayout from './admin/AdminLayout';
 import Dashboard from './admin/Dashboard';
@@ -27,8 +28,10 @@ import BannerPopup from './components/BannerPopup';
 import AdminLogin from "./Pages/Main/AdminLogin";
 
 import ProtectedRoute from './components/ProtectedRoute';
-import Unauthorized from './admin/Unauthorized'; 
+import Unauthorized from './admin/unauthorized'; 
 import NotExits from './admin/NotExits'; // ✅ Sử dụng trang 404 mới
+
+
 
 function AppContent() {
   const location = useLocation();
@@ -51,7 +54,8 @@ function AppContent() {
           <Route path="/Collab" element={<Collab />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/admin/login" element={<AdminLogin />} />
-
+          
+         
           <Route
             path="/admin"
             element={
@@ -70,6 +74,7 @@ function AppContent() {
             <Route path="banners" element={<AdminBannerManager />} />
             <Route path="interfaces" element={<AdminInterfaceManager />} />
             <Route path="users" element={<AdminUserManager />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
 
           <Route path="/admin/unauthorized" element={<Unauthorized />} />
