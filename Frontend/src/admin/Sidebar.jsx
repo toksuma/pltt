@@ -9,38 +9,27 @@ import {
   FaCogs,
   FaUsers,
   FaUserCircle,
+  FaPhotoVideo, // Nếu muốn dùng icon khác cho background
 } from "react-icons/fa";
 
 const Sidebar = ({ isOpen }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // So sánh pathname với path truyền vào
   const isActive = (path) => location.pathname === path;
 
-  // Trạng thái scroll
   const [atTop, setAtTop] = useState(true);
-  // State cho role và username
   const [role, setRole] = useState("");
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    // Đọc từ localStorage khi mount hoặc khi chuyển trang
     const storedRole = localStorage.getItem("role");
     const storedUsername = localStorage.getItem("username");
-
-    // Log các giá trị lấy được từ localStorage
-    console.log("==== Sidebar Debug ====");
-    console.log("localStorage.role:", storedRole);
-    console.log("localStorage.username:", storedUsername);
-    console.log("window.location.pathname:", window.location.pathname);
-
     setRole(storedRole || "Không xác định");
     setUsername(storedUsername || "Chưa xác định");
-  }, [location.pathname]); // Sẽ re-render khi chuyển trang
+  }, [location.pathname]);
 
   useEffect(() => {
-    // Xử lý hiệu ứng cuộn cho sidebar
     const handleScroll = () => {
       setAtTop(window.scrollY < 50);
     };
@@ -48,17 +37,13 @@ const Sidebar = ({ isOpen }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Xác định vị trí sidebar khi cuộn
   const topValue = atTop ? "64px" : "0px";
   const heightValue = atTop ? "calc(100vh - 64px)" : "100vh";
 
-  // Đăng xuất
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("username");
-    console.log("==== Sidebar Debug ====");
-    console.log("Đã xóa token, role, username khỏi localStorage");
     navigate("/admin/login");
   };
 
@@ -85,7 +70,7 @@ const Sidebar = ({ isOpen }) => {
       </div>
 
       <ul className="mt-4 space-y-2 px-4 flex-1">
-        {/* Profile - accessible to all users */}
+        {/* Profile */}
         <li>
           <Link
             to="/admin/profile"
@@ -99,7 +84,6 @@ const Sidebar = ({ isOpen }) => {
             <span>Thông tin cá nhân</span>
           </Link>
         </li>
-        
         {role === "admin" && (
           <li>
             <Link
@@ -182,6 +166,22 @@ const Sidebar = ({ isOpen }) => {
             <span>Quản lý giao diện</span>
           </Link>
         </li>
+        {/* Quản lý background - chỉ cho admin */}
+        {role === "admin" && (
+          <li>
+            <Link
+              to="/admin/background-manager"
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${
+                isActive("/admin/background-manager")
+                  ? "bg-gradient-to-r from-pink-500 via-red-400 to-orange-300 text-white shadow"
+                  : "hover:bg-gray-700"
+              }`}
+            >
+              <FaPhotoVideo />
+              <span>Quản lý background</span>
+            </Link>
+          </li>
+        )}
       </ul>
 
       <div className="p-4 border-t border-gray-700 text-center">

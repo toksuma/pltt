@@ -30,8 +30,8 @@ import AdminLogin from "./Pages/Main/AdminLogin";
 import ProtectedRoute from './components/ProtectedRoute';
 import Unauthorized from './admin/unauthorized'; 
 import NotExits from './admin/NotExits'; // ✅ Sử dụng trang 404 mới
-
-
+import BackgroundManager from './admin/BackgroundManager';
+import Landingpage from './Pages/Section/Landingpage';
 
 function AppContent() {
   const location = useLocation();
@@ -44,7 +44,9 @@ function AppContent() {
 
       <main className="flex-grow min-h-[calc(100vh-250px)]">
         <Routes>
+          {/* Trang public */}
           <Route path="/" element={<Home />} />
+          <Route path="/landingpage" element={<Landingpage />} />
           <Route path="/Interface" element={<Interface />} />
           <Route path="/Contact" element={<Contact />} />
           <Route path="/news" element={<News />} />
@@ -53,9 +55,10 @@ function AppContent() {
           <Route path="/Service" element={<Services />} />
           <Route path="/Collab" element={<Collab />} />
           <Route path="/Login" element={<Login />} />
+          <Route path="/background-manager" element={<BackgroundManager />} />
           <Route path="/admin/login" element={<AdminLogin />} />
-          
-         
+
+          {/* Các route admin */}
           <Route
             path="/admin"
             element={
@@ -75,6 +78,8 @@ function AppContent() {
             <Route path="interfaces" element={<AdminInterfaceManager />} />
             <Route path="users" element={<AdminUserManager />} />
             <Route path="profile" element={<Profile />} />
+            {/* Sửa lại: KHÔNG dùng path tuyệt đối ở đây */}
+            <Route path="background-manager" element={<BackgroundManager />} />
           </Route>
 
           <Route path="/admin/unauthorized" element={<Unauthorized />} />
