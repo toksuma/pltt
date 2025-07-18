@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
 // Routes cho chức năng quản trị
 app.use("/api/banners", require("./routes/banner"));
+app.use("/api/backgrounds", require("./routes/backgrounds"));
 app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/contacts", require("./routes/contacts"));
 app.use("/api/articles", require("./routes/articles"));
