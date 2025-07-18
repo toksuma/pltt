@@ -33,6 +33,9 @@ import NotExits from './admin/NotExits'; // ✅ Sử dụng trang 404 mới
 import BackgroundManager from './admin/BackgroundManager';
 import Landingpage from './Pages/Section/Landingpage';
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");

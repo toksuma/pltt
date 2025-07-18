@@ -21,7 +21,8 @@ const Home = () => {
 
   return (
     <div className="w-full bg-white">
-      <Landingpage />
+
+      <div data-aos="w-full fade-up"><Landingpage /></div>
       <div data-aos="fade-up"><Jobs /></div>
       <div data-aos="fade-up"><Benefits /></div>
       <div data-aos="fade-up"><Function /></div>

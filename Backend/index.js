@@ -2,8 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const PORT = 5000;
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+
 // Middleware xác thực & phân quyền
 const { authenticate, authorize } = require("./middleware/auth");
 
@@ -19,6 +18,7 @@ app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
 // Routes cho chức năng quản trị
 app.use("/api/banners", require("./routes/banner"));
+app.use("/api/backgrounds", require("./routes/backgrounds.routes")); // <-- Đã bật lại!
 app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/contacts", require("./routes/contacts"));
 app.use("/api/articles", require("./routes/articles"));
@@ -33,7 +33,6 @@ const previewImageRoute = require("./routes/previewImage");
 app.use("/api/preview-image", previewImageRoute);
 
 // Auth: Đăng nhập, đăng ký, kiểm tra token
-// Login URL: http://localhost:5000/api/login
 app.use("/api", require("./routes/auth"));
 
 // Test route phân quyền: chỉ Admin được truy cập
