@@ -26,21 +26,20 @@ const pricingPlans = [
 ];
 
 const Services = () => (
-  <section className="bg-white py-10 px-[3cm]">
+  <section className="bg-white py-10 px-4 md:px-[3cm]">
     <div className="text-center mb-8">
-      <h1 className="text-4xl font-bold text-red-600 mb-2">
+      <h1 className="text-3xl md:text-4xl font-bold text-red-600 mb-2">
         DỊCH VỤ ĐANG CUNG CẤP
       </h1>
-      <h2 className="text-xl">
+      <h2 className="text-lg md:text-xl">
         Chúng tôi luôn sẵn sàng cung cấp cho bạn những giải pháp dịch vụ web landing page tối ưu nhất để giúp bạn tối ưu chi phí quảng cáo, gia tăng khách hàng và tăng tỷ lệ chốt đơn cao nhất
       </h2>
     </div>
-    <div className="flex justify-between gap-[1cm]">
+    <div className="flex flex-col md:flex-row justify-between gap-6 md:gap-[1cm]">
       {pricingPlans.map((plan, index) => (
         <div
           key={index}
-          className={`${plan.bgColor} flex-shrink-0 p-4 rounded-xl shadow-md flex flex-col justify-between`}
-          style={{ width: "calc((100% - 3cm) / 4)" }}
+          className={`${plan.bgColor} flex-shrink-0 p-4 rounded-xl shadow-md flex flex-col justify-between w-full md:w-[calc((100%_-_3cm)_/_4)]`}
         >
           <div>
             <img
@@ -48,7 +47,7 @@ const Services = () => (
               alt={plan.title}
               className="rounded-md mb-4 w-full h-36 object-contain"
             />
-            <h1 className="text-xl font-bold text-center text-gray-800 mb-1">
+            <h1 className="text-lg md:text-xl font-bold text-center text-gray-800 mb-1">
               {plan.title}
             </h1>
             <h2 className="text-center text-gray-600">{plan.subtitle}</h2>

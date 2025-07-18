@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "../axios"; // Use configured axios instance
+import axios from "../axios"; // Instance đã cấu hình baseURL
 import { 
   FaUser, 
   FaEnvelope, 
@@ -13,7 +13,7 @@ import {
   FaUserCircle
 } from "react-icons/fa";
 
-const API_URL = "/api/users"; // Use relative URL since baseURL is configured
+const API_URL = "/api/users"; // Sử dụng đường dẫn tương đối do đã có baseURL
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -29,16 +29,27 @@ const Profile = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
+  // Luôn gửi Authorization header với token khi gọi API
   const fetchProfile = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/profile`);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Bạn chưa đăng nhập!");
+        setLoading(false);
+        return;
+      }
+      const res = await axios.get(`${API_URL}/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setProfile(res.data);
     } catch (err) {
       console.error("Error fetching profile:", err);
       if (err.response?.status === 401) {
         alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-        // Redirect to login or handle auth error
+        // Có thể chuyển hướng về trang login tại đây
       }
     } finally {
       setLoading(false);
@@ -49,6 +60,7 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
+  // Đổi mật khẩu
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     
@@ -56,7 +68,6 @@ const Profile = () => {
       alert("Mật khẩu xác nhận không khớp!");
       return;
     }
-
     if (passwordForm.new_password.length < 6) {
       alert("Mật khẩu mới phải có ít nhất 6 ký tự!");
       return;
@@ -64,11 +75,20 @@ const Profile = () => {
 
     setLoading(true);
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Bạn chưa đăng nhập!");
+        setLoading(false);
+        return;
+      }
       await axios.put(`${API_URL}/profile`, {
         current_password: passwordForm.current_password,
         new_password: passwordForm.new_password
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
-      
       alert("Đổi mật khẩu thành công!");
       setShowPasswordModal(false);
       setPasswordForm({ current_password: "", new_password: "", confirm_password: "" });
@@ -80,9 +100,9 @@ const Profile = () => {
     }
   };
 
+  // Đổi/cập nhật ảnh đại diện
   const handleImageUpdate = async (e) => {
     e.preventDefault();
-    
     if (!imageUrl.trim()) {
       alert("Vui lòng nhập URL ảnh!");
       return;
@@ -90,10 +110,19 @@ const Profile = () => {
 
     setLoading(true);
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Bạn chưa đăng nhập!");
+        setLoading(false);
+        return;
+      }
       await axios.put(`${API_URL}/profile`, {
         profile_image: imageUrl
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
-      
       alert("Cập nhật ảnh đại diện thành công!");
       setShowImageModal(false);
       setImageUrl("");
@@ -466,4 +495,4 @@ const Profile = () => {
   );
 };
 
-export default Profile; 
+export default Profile;

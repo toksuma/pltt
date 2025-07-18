@@ -16,12 +16,18 @@ const AdminLogin = () => {
 
     try {
       const res = await axios.post("http://localhost:5000/api/login", form);
+      console.log("API login trả về:", res.data);
+
       const { token, role, username } = res.data;
 
-      // ✅ Lưu đủ thông tin
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
-      localStorage.setItem("username", username); // 👈 quan trọng
+      localStorage.setItem("username", username);
+
+      console.log("Sau khi lưu localStorage:");
+      console.log("token:", localStorage.getItem("token"));
+      console.log("role:", localStorage.getItem("role"));
+      console.log("username:", localStorage.getItem("username"));
 
       if (role === "admin") {
         navigate("/admin/dashboard");
@@ -32,6 +38,7 @@ const AdminLogin = () => {
       }
     } catch (err) {
       setError("Sai tài khoản hoặc mật khẩu");
+      console.log("Lỗi login:", err?.response?.data || err);
     }
   };
 

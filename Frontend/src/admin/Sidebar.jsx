@@ -14,19 +14,33 @@ import {
 const Sidebar = ({ isOpen }) => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  // So sánh pathname với path truyền vào
   const isActive = (path) => location.pathname === path;
 
+  // Trạng thái scroll
   const [atTop, setAtTop] = useState(true);
-  const [role, setRole] = useState("admin");
-  const [username, setUsername] = useState("Chưa xác định");
+  // State cho role và username
+  const [role, setRole] = useState("");
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
+    // Đọc từ localStorage khi mount hoặc khi chuyển trang
     const storedRole = localStorage.getItem("role");
     const storedUsername = localStorage.getItem("username");
 
-    if (storedRole) setRole(storedRole);
-    if (storedUsername) setUsername(storedUsername);
+    // Log các giá trị lấy được từ localStorage
+    console.log("==== Sidebar Debug ====");
+    console.log("localStorage.role:", storedRole);
+    console.log("localStorage.username:", storedUsername);
+    console.log("window.location.pathname:", window.location.pathname);
 
+    setRole(storedRole || "Không xác định");
+    setUsername(storedUsername || "Chưa xác định");
+  }, [location.pathname]); // Sẽ re-render khi chuyển trang
+
+  useEffect(() => {
+    // Xử lý hiệu ứng cuộn cho sidebar
     const handleScroll = () => {
       setAtTop(window.scrollY < 50);
     };
@@ -34,13 +48,17 @@ const Sidebar = ({ isOpen }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Xác định vị trí sidebar khi cuộn
   const topValue = atTop ? "64px" : "0px";
   const heightValue = atTop ? "calc(100vh - 64px)" : "100vh";
 
+  // Đăng xuất
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("username");
+    console.log("==== Sidebar Debug ====");
+    console.log("Đã xóa token, role, username khỏi localStorage");
     navigate("/admin/login");
   };
 
@@ -53,10 +71,17 @@ const Sidebar = ({ isOpen }) => {
     >
       <div className="p-4 border-b border-gray-700">
         <h3 className="text-lg font-extrabold tracking-wider">QUẢN TRỊ WEBSITE</h3>
-        <p className="text-sm text-pink-300 font-semibold">TungPageV7</p>
-        <p className="text-xs text-green-400 mt-2 font-medium">
-          👤 Tài khoản: {username}
-        </p>
+        <p className="text-sm text-pink-300 font-semibold">TungSideBarV8</p>
+        <div className="mt-2 space-y-1">
+          <p className="text-xs text-green-400 font-medium">
+            👤 Username: <span className="text-white font-semibold">{username}</span>
+          </p>
+          <p className="text-xs text-yellow-400 font-medium">
+            🏷️ Role: <span className="text-white font-semibold">
+              {role === "admin" ? "Admin" : (role === "staff" ? "Staff" : role)}
+            </span>
+          </p>
+        </div>
       </div>
 
       <ul className="mt-4 space-y-2 px-4 flex-1">
@@ -65,7 +90,7 @@ const Sidebar = ({ isOpen }) => {
           <Link
             to="/admin/profile"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-colors ${
-              isActive("/profile")
+              isActive("/admin/profile")
                 ? "bg-gradient-to-r from-pink-500 via-red-400 to-orange-300 text-white shadow"
                 : "hover:bg-gray-700"
             }`}

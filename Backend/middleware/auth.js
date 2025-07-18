@@ -8,10 +8,14 @@ const authenticate = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    req.user = decoded;
+    // Đảm bảo id là số, không phải chuỗi
+    if (!decoded.id || isNaN(decoded.id)) {
+      return res.status(401).json({ error: "Token không hợp lệ: thiếu hoặc sai id" });
+    }
+    req.user = { ...decoded, id: Number(decoded.id) }; // ép về số
     next();
   } catch (err) {
-    res.status(403).json({ error: "Token không hợp lệ" });
+    res.status(401).json({ error: "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại." });
   }
 };
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "../axios"; // Use configured axios instance
+import axios from "../axios";
 import { 
   FaUser, 
   FaPlus, 
@@ -14,7 +14,7 @@ import {
   FaCalendarAlt
 } from "react-icons/fa";
 
-const API_URL = "/api/users"; // Use relative URL since baseURL is configured
+const API_URL = "/api/users";
 
 const initialForm = {
   username: "",
@@ -22,6 +22,7 @@ const initialForm = {
   full_name: "",
   role: "staff",
   password: "",
+  profile_image: "",
 };
 
 const roles = [
@@ -93,21 +94,32 @@ const AdminUserManager = () => {
       full_name: user.full_name || "",
       role: user.role || "staff",
       password: "",
+      profile_image: user.profile_image || "",
     });
     setEditingId(user.id);
     setShowPopup(true);
   };
 
   const handleDelete = async (id, username) => {
+    console.log("[DEBUG] Gửi yêu cầu xóa user:", { id, username });
     if (!window.confirm(`Bạn chắc chắn muốn xóa tài khoản "${username}"?`)) return;
     setLoading(true);
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      const response = await axios.delete(`${API_URL}/${id}`);
+      console.log("[DEBUG] Kết quả trả về khi xóa:", response.data);
       fetchUsers();
       alert("Xóa tài khoản thành công!");
     } catch (err) {
-      console.error("Error deleting user:", err);
-      alert(err.response?.data?.error || "Có lỗi khi xóa tài khoản.");
+      if (err.response) {
+        console.error("[DEBUG] Lỗi phản hồi khi xóa:", err.response.status, err.response.data);
+        alert(`Lỗi: ${err.response.status} - ${JSON.stringify(err.response.data)}`);
+      } else if (err.request) {
+        console.error("[DEBUG] Không nhận được phản hồi từ server khi xóa:", err.request);
+        alert("Không nhận được phản hồi từ server");
+      } else {
+        console.error("[DEBUG] Lỗi khi gửi yêu cầu xóa:", err.message);
+        alert("Lỗi khi gửi yêu cầu: " + err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -122,7 +134,6 @@ const AdminUserManager = () => {
   const sortedUsers = [...users].sort((a, b) => {
     const aVal = a[sortField] || '';
     const bVal = b[sortField] || '';
-    
     if (sortDirection === 'asc') {
       return aVal.toString().localeCompare(bVal.toString());
     } else {
@@ -189,7 +200,6 @@ const AdminUserManager = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
         )}
-        
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-200">
@@ -339,7 +349,6 @@ const AdminUserManager = () => {
                     required
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Email *
@@ -354,7 +363,6 @@ const AdminUserManager = () => {
                     required
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Họ và tên *
@@ -368,7 +376,6 @@ const AdminUserManager = () => {
                     required
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Vai trò *
@@ -384,7 +391,18 @@ const AdminUserManager = () => {
                     ))}
                   </select>
                 </div>
-
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Ảnh đại diện (URL)
+                  </label>
+                  <input
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 
+                             focus:ring-blue-500 focus:border-transparent transition-all"
+                    placeholder="Nhập đường dẫn ảnh"
+                    value={form.profile_image}
+                    onChange={e => handleInputChange("profile_image", e.target.value)}
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     {editingId ? "Mật khẩu mới (bỏ trống nếu không đổi)" : "Mật khẩu *"}
@@ -400,7 +418,6 @@ const AdminUserManager = () => {
                     autoComplete="new-password"
                   />
                 </div>
-
                 <div className="flex justify-end gap-3 pt-4">
                   <button 
                     type="button" 

@@ -39,7 +39,7 @@ app.post("/api/login", (req, res) => {
       res.json({
         token,
         role: user.role,
-        username: user.username,
+        username: user.fullname || user.username, // sử dụng fullname nếu có, ngược lại dùng username
       });
     }
   );

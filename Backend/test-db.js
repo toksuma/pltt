@@ -1,5 +1,5 @@
 // test-db.js
-const db = require("./db");
+const db = require("./routes/db");
 
 db.query("SELECT 1", (err, results) => {
   if (err) {
