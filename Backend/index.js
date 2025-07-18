@@ -2,8 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const PORT = 5000;
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+
 // Middleware xác thực & phân quyền
 const { authenticate, authorize } = require("./middleware/auth");
 
