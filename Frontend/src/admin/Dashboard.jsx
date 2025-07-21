@@ -3,7 +3,15 @@ import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 
+/**
+ * Dashboard quản trị website:
+ * - Hiển thị thống kê: tổng bài viết, nhân viên, liên hệ.
+ * - Hiển thị các hoạt động gần đây.
+ * - Làm gọn code, comment rõ ràng, giữ nguyên logic.
+ */
+
 const AdminDashboard = () => {
+  // State lưu thống kê và log hoạt động gần đây
   const [stats, setStats] = useState({
     total_articles: 0,
     total_contacts: 0,
@@ -11,27 +19,30 @@ const AdminDashboard = () => {
   });
   const [recentLogs, setRecentLogs] = useState([]);
 
+  // Lấy dữ liệu khi load trang
   useEffect(() => {
     fetchStats();
     fetchLogs();
     // eslint-disable-next-line
   }, []);
 
+  // Lấy thống kê tổng quan từ API
   const fetchStats = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/dashboard");
       setStats(res.data);
     } catch (error) {
-      // Silently fail
+      // Không xử lý lỗi
     }
   };
 
+  // Lấy hoạt động gần đây từ API
   const fetchLogs = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/dashboard/recent");
       setRecentLogs(res.data);
     } catch (error) {
-      // Silently fail
+      // Không xử lý lỗi
     }
   };
 

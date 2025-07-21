@@ -3,13 +3,14 @@ const router = express.Router();
 const db = require("../db");
 const { authenticate, authorize } = require("../middleware/auth"); 
 
+// API CRUD bài viết, có xác thực và phân quyền cho admin.
+
 // Route chỉ cho admin truy cập
 router.get("/admin-list", authenticate, authorize("admin"), (req, res) => {
   res.json({ message: "Danh sách chỉ admin được xem" });
 });
 
-
-// lấy tất cả bài viết
+// Lấy tất cả bài viết
 router.get("/", (req, res) => {
   const sql = "SELECT * FROM articles ORDER BY id DESC";
   db.query(sql, (err, results) => {

@@ -4,10 +4,13 @@ const db = require("../db");
 const { authenticate } = require("../middleware/auth");
 const bcrypt = require("bcryptjs");
 
-// Lấy thông tin profile user hiện tại
+// Router quản lý profile người dùng: lấy thông tin, cập nhật avatar hoặc mật khẩu
+
+/**
+ * Lấy thông tin profile user hiện tại
+ */
 router.get("/", authenticate, (req, res) => {
   const userId = req.user.id;
-
   db.query(
     "SELECT id, username, role, created_at, email, full_name, profile_image FROM users WHERE id = ?",
     [userId],
@@ -33,17 +36,18 @@ router.get("/", authenticate, (req, res) => {
   );
 });
 
-// Cập nhật thông tin profile (ảnh đại diện hoặc mật khẩu)
+/**
+ * Cập nhật thông tin profile (ảnh đại diện hoặc mật khẩu)
+ * - Nếu truyền profile_image: cập nhật avatar
+ * - Nếu truyền current_password và new_password: đổi mật khẩu
+ */
 router.put("/", authenticate, (req, res) => {
   const userId = req.user.id;
   const { profile_image, current_password, new_password } = req.body;
-
-  // Log dữ liệu FE gửi lên
   console.log("[DEBUG] PUT /api/users/profile body:", req.body);
 
-  // Cập nhật ảnh đại diện
+  // Cập nhật avatar cho user hiện tại
   if (typeof profile_image !== "undefined") {
-    // Xử lý: nếu chuỗi rỗng hoặc null thì set về NULL
     let value = null;
     if (profile_image !== null && typeof profile_image === "string" && profile_image.trim() !== "") {
       value = profile_image.trim();
@@ -65,7 +69,7 @@ router.put("/", authenticate, (req, res) => {
     return;
   }
 
-  // Đổi mật khẩu
+  // Đổi mật khẩu cho user hiện tại
   if (current_password && new_password) {
     if (typeof new_password !== "string" || new_password.length < 6) {
       return res.status(400).json({ error: "Mật khẩu mới phải có ít nhất 6 ký tự" });
@@ -108,7 +112,7 @@ router.put("/", authenticate, (req, res) => {
     return;
   }
 
-  // Không truyền đủ dữ liệu
+  // Không truyền đủ dữ liệu để cập nhật
   res.status(400).json({ error: "Dữ liệu không hợp lệ" });
 });
 

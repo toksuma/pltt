@@ -2,8 +2,14 @@ const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
 
+// Công cụ lấy link ảnh đại diện từ url bên ngoài. Trả về ảnh og:image hoặc ảnh đầu tiên trên trang.
+
 const router = express.Router();
 
+/**
+ * Lấy link ảnh đại diện từ url truyền vào (ưu tiên og:image, nếu không lấy ảnh đầu tiên trong body)
+ * Trả về đường dẫn ảnh tuyệt đối, hoặc báo lỗi nếu không tìm được ảnh.
+ */
 router.get("/", async (req, res) => {
   const { url } = req.query;
   if (!url) return res.status(400).json({ error: "Thiếu URL" });

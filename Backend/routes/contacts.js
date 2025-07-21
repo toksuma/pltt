@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db"); // Kết nối CSDL
 
+// API CRUD contacts, lấy danh sách và thêm liên hệ.
+
 // GET /api/contacts
 // Lấy toàn bộ liên hệ từ bảng `contacts`, sắp xếp mới nhất trước
 router.get("/", (req, res) => {
@@ -30,8 +32,8 @@ router.post("/", (req, res) => {
       console.error("Lỗi thêm liên hệ:", err);
       return res.status(500).json({ error: "Lỗi server khi lưu liên hệ." });
     }
-    res.json({ message: "Gửi liên hệ thành công!" }); // ✅ Phản hồi thành công
+    res.json({ message: "Gửi liên hệ thành công!" }); 
   });
 });
 
-module.exports = router; // Export route để dùng trong index.js
+module.exports = router; 

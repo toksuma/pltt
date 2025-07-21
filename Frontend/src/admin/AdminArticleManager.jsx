@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+// Component quản lý bài viết (admin): tạo, sửa, xoá, danh sách, popup nhập liệu, xử lý nội dung và hình ảnh
+
 const API_URL = "http://localhost:5000/api/articles";
 
+/**
+ * Quản lý bài viết cho admin.
+ * - Hiển thị danh sách bài viết
+ * - Thêm/sửa/xoá bài viết
+ * - Popup nhập liệu, xử lý nội dung nhiều block kèm hình ảnh
+ * - Hỗ trợ thêm hình phụ, thông tin footer
+ */
 const AdminArticleManager = () => {
   const [articles, setArticles] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -17,6 +26,7 @@ const AdminArticleManager = () => {
     additional_images: [{ url: "", caption: "" }],
   });
 
+  // Lấy danh sách bài viết
   const fetchArticles = async () => {
     try {
       const res = await axios.get(API_URL);
@@ -30,6 +40,7 @@ const AdminArticleManager = () => {
     fetchArticles();
   }, []);
 
+  // Lưu bài viết (thêm hoặc cập nhật)
   const handleSubmit = async () => {
     const mergedContent = formData.contentBlocks
       .map((block, i) => {
@@ -75,6 +86,7 @@ const AdminArticleManager = () => {
     } catch (err) {}
   };
 
+  // Tách html content thành các block và hình ảnh đan xen
   const splitContentToBlocks = (htmlContent) => {
     const parts = htmlContent.split(/<div style="text-align:center;">/i);
     const blocks = [];
@@ -99,6 +111,7 @@ const AdminArticleManager = () => {
     return { blocks, images };
   };
 
+  // Chỉnh sửa bài viết
   const handleEdit = (article) => {
     const { blocks, images } = splitContentToBlocks(article.content || "");
     setFormData({
@@ -116,6 +129,7 @@ const AdminArticleManager = () => {
     setShowPopup(true);
   };
 
+  // Xoá bài viết
   const handleDelete = async (id) => {
     if (!window.confirm("Xoá bài viết này?")) return;
     try {
@@ -124,6 +138,7 @@ const AdminArticleManager = () => {
     } catch {}
   };
 
+  // Thêm block nội dung mới
   const handleAddBlock = () => {
     setFormData((prev) => ({
       ...prev,
@@ -132,6 +147,7 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Xoá block nội dung
   const handleRemoveBlock = (index) => {
     const newBlocks = [...formData.contentBlocks];
     const newImages = [...formData.interleavedImages];
@@ -144,12 +160,14 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Sửa nội dung block
   const handleBlockChange = (index, html) => {
     const updated = [...formData.contentBlocks];
     updated[index] = html;
     setFormData((prev) => ({ ...prev, contentBlocks: updated }));
   };
 
+  // Sửa thông tin hình ảnh đan xen block
   const handleImageInputChange = (index, key, value) => {
     const updated = [...formData.interleavedImages];
     if (!updated[index]) updated[index] = { url: "", caption: "" };
@@ -157,6 +175,7 @@ const AdminArticleManager = () => {
     setFormData((prev) => ({ ...prev, interleavedImages: updated }));
   };
 
+  // Thêm thông tin footer vào cuối bài viết
   const handleAddFooterInfo = () => {
     const footerHTML = `Website: https://dichvulandingpage.com<br>Email: dichvuweblandingpage@gmail.com<br>Điện thoại: 0902.813.410`;
     setFormData((prev) => ({
@@ -166,6 +185,7 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Thêm hình phụ
   const handleAddRelatedImage = () => {
     setFormData((prev) => ({
       ...prev,
@@ -173,6 +193,7 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Xoá hình phụ
   const handleRemoveRelatedImage = (index) => {
     setFormData((prev) => ({
       ...prev,
@@ -180,12 +201,14 @@ const AdminArticleManager = () => {
     }));
   };
 
+  // Sửa thông tin hình phụ
   const handleRelatedImageChange = (index, key, value) => {
     const updated = [...formData.additional_images];
     updated[index][key] = value;
     setFormData((prev) => ({ ...prev, additional_images: updated }));
   };
 
+  // Sửa các trường nhập liệu chung
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };

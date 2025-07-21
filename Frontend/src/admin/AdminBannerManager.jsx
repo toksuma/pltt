@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 
+// Component quản lý banner: thêm, sửa, xoá, kích hoạt, xem thử, đồng hồ khuyến mãi
+
 const AdminBannerManager = () => {
   const [banners, setBanners] = useState([]);
   const [previewBanner, setPreviewBanner] = useState(null);
@@ -15,6 +17,7 @@ const AdminBannerManager = () => {
     overlay_color: "#FF0000",
   });
 
+  // Lấy danh sách banner
   const fetchBanners = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/banners");
@@ -24,6 +27,7 @@ const AdminBannerManager = () => {
     }
   };
 
+  // Thêm hoặc cập nhật banner
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingBannerId) {
@@ -43,6 +47,7 @@ const AdminBannerManager = () => {
     fetchBanners();
   };
 
+  // Chỉnh sửa banner
   const handleEdit = (banner) => {
     setForm({
       title: banner.title || "",
@@ -56,6 +61,7 @@ const AdminBannerManager = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Xoá banner
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn xoá banner này không?")) {
       await axios.delete(`http://localhost:5000/api/banners/${id}`);
@@ -63,6 +69,7 @@ const AdminBannerManager = () => {
     }
   };
 
+  // Kích hoạt banner
   const handleActivate = async (id) => {
     try {
       await axios.put(`http://localhost:5000/api/banners/${id}/activate`);
@@ -74,6 +81,7 @@ const AdminBannerManager = () => {
     fetchBanners();
   }, []);
 
+  // Đếm ngược thời gian khuyến mãi (12h từ updated_at hoặc created_at)
   const getCountdown = (startTime) => {
     const now = new Date();
     const start = new Date(startTime);

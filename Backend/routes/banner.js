@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
+// API CRUD banners, hỗ trợ kích hoạt và cập nhật trạng thái.
+
 // Lấy toàn bộ banner, sắp xếp mới nhất trước
 router.get("/", (req, res) => {
   db.query("SELECT * FROM banners ORDER BY id DESC", (err, results) => {

@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
+// API CRUD interfaces & categories, sinh mã tự động, trả về đếm thể loại.
+
 // 🔹 Tạo mã giao diện tự động
 const getNextCode = (callback) => {
   db.query("SELECT MAX(CAST(code AS UNSIGNED)) AS maxCode FROM interfaces", (err, result) => {

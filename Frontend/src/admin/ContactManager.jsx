@@ -3,23 +3,35 @@ import Sidebar from "./Sidebar";
 import axios from "axios";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
+/**
+ * Quản lý form liên hệ landing page:
+ * - Lấy dữ liệu liên hệ từ API, thống kê landing page và từ khóa phổ biến.
+ * - Hiển thị biểu đồ và bảng dữ liệu.
+ * - Làm gọn code, comment rõ ràng, không thay đổi logic.
+ */
+
 const AdminContactManager = () => {
+  // State lưu danh sách liên hệ, thống kê landing page, thống kê từ khóa
   const [contacts, setContacts] = useState([]);
   const [landingStats, setLandingStats] = useState([]);
   const [keywordStats, setKeywordStats] = useState([]);
 
+  // Lấy dữ liệu liên hệ khi load trang
   useEffect(() => {
     fetchContacts();
     // eslint-disable-next-line
   }, []);
 
+  // Hàm lấy dữ liệu liên hệ, xử lý thống kê landing page & từ khóa
   const fetchContacts = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/contacts");
       const data = res.data;
       setContacts(data);
 
+      // Thống kê landing code
       const landingMap = {};
+      // Thống kê từ khoá phổ biến (> 3 ký tự)
       const keywordMap = {};
 
       data.forEach((item) => {
@@ -35,11 +47,13 @@ const AdminContactManager = () => {
         });
       });
 
+      // Định dạng dữ liệu cho biểu đồ landing page
       const landingData = Object.entries(landingMap).map(([code, count]) => ({
         code,
         count,
       }));
 
+      // Định dạng dữ liệu cho biểu đồ từ khoá (top 10)
       const keywordData = Object.entries(keywordMap)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10)
@@ -59,7 +73,8 @@ const AdminContactManager = () => {
         <h1 className="text-3xl font-extrabold mb-7 text-blue-800 tracking-tight">
           Quản lý Form Liên hệ
         </h1>
-        {/* Chart */}
+
+        {/* Biểu đồ tần suất chọn Landing Page */}
         <section className="bg-white p-6 rounded-2xl shadow-lg mb-8">
           <h2 className="text-lg font-semibold text-blue-700 mb-3">
             Tần suất chọn Landing Page
@@ -82,7 +97,7 @@ const AdminContactManager = () => {
           </ResponsiveContainer>
         </section>
 
-        {/* Keyword Chart */}
+        {/* Biểu đồ từ khóa phổ biến */}
         <section className="bg-white p-6 rounded-2xl shadow-lg mb-8">
           <h2 className="text-lg font-semibold text-cyan-700 mb-3">
             Từ khóa phổ biến trong lời nhắn
@@ -105,7 +120,7 @@ const AdminContactManager = () => {
           </ResponsiveContainer>
         </section>
 
-        {/* Contacts Table */}
+        {/* Bảng danh sách liên hệ */}
         <section className="bg-white p-6 rounded-2xl shadow-lg">
           <h2 className="text-lg font-semibold text-slate-700 mb-4">
             Danh sách liên hệ

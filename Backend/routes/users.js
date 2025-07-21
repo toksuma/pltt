@@ -3,7 +3,11 @@ const router = express.Router();
 const { authenticate } = require("../middleware/auth");
 const db = require('../db');
 
-// Lấy thông tin profile user hiện tại
+// Quản lý tài khoản người dùng: lấy profile, danh sách user, tạo, sửa, xoá
+
+/**
+ * Lấy thông tin profile user hiện tại
+ */
 router.get("/profile", authenticate, (req, res) => {
   const userId = req.user.id;
   db.query(
@@ -22,7 +26,9 @@ router.get("/profile", authenticate, (req, res) => {
   );
 });
 
-// Lấy tất cả user
+/**
+ * Lấy danh sách tất cả user
+ */
 router.get("/", (req, res) => {
   db.query("SELECT * FROM users", (err, results) => {
     if (err) {
@@ -33,7 +39,9 @@ router.get("/", (req, res) => {
   });
 });
 
-// Tạo mới user
+/**
+ * Tạo mới tài khoản user
+ */
 router.post("/", (req, res) => {
   const { username, password, email, full_name, profile_image, role } = req.body;
   if (!username || !password || !email) {
@@ -61,7 +69,9 @@ router.post("/", (req, res) => {
   );
 });
 
-// Xóa user
+/**
+ * Xoá tài khoản user theo id
+ */
 router.delete("/:id", (req, res) => {
   const userId = req.params.id;
   db.query("DELETE FROM users WHERE id = ?", [userId], (err, result) => {
@@ -75,7 +85,10 @@ router.delete("/:id", (req, res) => {
     res.json({ message: "Xóa tài khoản thành công!" });
   });
 });
-// UPDATE USER
+
+/**
+ * Cập nhật thông tin user theo id
+ */
 router.put("/:id", (req, res) => {
   const userId = req.params.id;
   const { username, email, full_name, profile_image, role } = req.body;

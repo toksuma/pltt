@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+// Quản lý giao diện landing page cho admin: thêm, sửa, xoá giao diện & thể loại, xem trước hình ảnh.
+// Dùng API nội bộ để lấy/chỉnh dữ liệu; không dùng icon, chỉ dùng nút text.
+
+// Đường dẫn API cho giao diện
 const API_URL = "http://localhost:5000/api/interfaces";
 
 const AdminInterfaceManager = () => {
+  // State lưu dữ liệu giao diện, thể loại, form, trạng thái chỉnh sửa, hình xem trước...
   const [interfaces, setInterfaces] = useState([]);
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({
@@ -19,11 +24,13 @@ const AdminInterfaceManager = () => {
   const [imagePreview, setImagePreview] = useState("");
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
 
+  // Lấy danh sách giao diện/thể loại khi load trang
   useEffect(() => {
     fetchInterfaces();
     fetchCategories();
   }, []);
 
+  // Xem trước hình ảnh từ URL nhập vào (dùng linkpreview)
   useEffect(() => {
     const fetchImagePreview = async () => {
       if (!form.url) return;
@@ -53,16 +60,19 @@ const AdminInterfaceManager = () => {
     // eslint-disable-next-line
   }, [form.url]);
 
+  // Lấy danh sách giao diện
   const fetchInterfaces = async () => {
     const res = await axios.get(API_URL);
     setInterfaces(res.data);
   };
 
+  // Lấy danh sách thể loại
   const fetchCategories = async () => {
     const res = await axios.get(`${API_URL}/categories`);
     setCategories(res.data);
   };
 
+  // Xử lý submit form: Thêm/Cập nhật giao diện
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.url || !form.category_id || !form.preview_image_url) return;
@@ -80,6 +90,7 @@ const AdminInterfaceManager = () => {
     fetchCategories();
   };
 
+  // Chọn giao diện để chỉnh sửa
   const handleEdit = (item) => {
     setForm({
       name: item.name,
@@ -91,6 +102,7 @@ const AdminInterfaceManager = () => {
     setEditId(item.id);
   };
 
+  // Xoá giao diện
   const handleDelete = async (id) => {
     if (window.confirm("Xoá giao diện này?")) {
       await axios.delete(`${API_URL}/${id}`);
@@ -99,6 +111,7 @@ const AdminInterfaceManager = () => {
     }
   };
 
+  // Thêm thể loại mới
   const handleAddCategory = async () => {
     if (!categoryInput) return;
     await axios.post(`${API_URL}/categories`, { name: categoryInput });
@@ -106,12 +119,14 @@ const AdminInterfaceManager = () => {
     fetchCategories();
   };
 
+  // Sửa tên thể loại
   const handleEditCategory = async (id, name) => {
     await axios.put(`${API_URL}/categories/${id}`, { name });
     setEditingCategoryId(null);
     fetchCategories();
   };
 
+  // Xoá thể loại
   const handleDeleteCategory = async (id) => {
     if (window.confirm("Xoá thể loại này?")) {
       await axios.delete(`${API_URL}/categories/${id}`);
@@ -122,13 +137,14 @@ const AdminInterfaceManager = () => {
     }
   };
 
+  // Lọc giao diện theo thể loại đang chọn
   const interfacesByCategory = selectedCategoryId
     ? interfaces.filter((item) => item.category_id === selectedCategoryId)
     : interfaces;
 
   return (
     <div className="p-6 flex gap-6 bg-gradient-to-tr from-gray-100 via-blue-50 to-cyan-50 min-h-screen">
-      {/* Sidebar Categories */}
+      {/* Sidebar: Quản lý thể loại */}
       <div className="w-[260px] bg-white rounded-2xl shadow-md p-4 sticky top-20 h-fit border border-gray-100">
         <h2 className="text-lg font-semibold mb-2 text-blue-800">Hạng mục</h2>
         <ul className="space-y-1 text-sm">
@@ -201,12 +217,12 @@ const AdminInterfaceManager = () => {
           </button>
         </div>
       </div>
-      {/* Main Content */}
+      {/* Main Content: Quản lý giao diện */}
       <div className="flex-1">
         <h1 className="text-2xl font-bold mb-5 uppercase text-blue-900 tracking-tight">
           MẪU GIAO DIỆN LANDING PAGE
         </h1>
-        {/* Form */}
+        {/* Form tạo/cập nhật giao diện */}
         <form onSubmit={handleFormSubmit} className="bg-white p-5 rounded-2xl shadow-md mb-7 border border-gray-100">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -260,11 +276,13 @@ const AdminInterfaceManager = () => {
             {editId ? "Cập nhật" : "Thêm mới"}
           </button>
         </form>
-        {/* Grid of interfaces */}
+        {/* Danh sách giao diện theo thể loại */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
           {interfacesByCategory.map((item) => (
             <div key={item.id} className="border border-gray-100 bg-white rounded-2xl shadow p-3 flex flex-col hover:shadow-lg transition">
-              <div className="font-semibold text-base mb-1 text-gray-900">{item.name} <span className="text-xs text-gray-500">#{item.code}</span></div>
+              <div className="font-semibold text-base mb-1 text-gray-900">
+                {item.name} <span className="text-xs text-gray-500">#{item.code}</span>
+              </div>
               <img
                 src={item.preview_image_url}
                 alt={item.name}
@@ -299,7 +317,9 @@ const AdminInterfaceManager = () => {
             </div>
           ))}
           {interfacesByCategory.length === 0 && (
-            <div className="col-span-full text-center text-gray-400 py-10">Không có giao diện nào trong mục này.</div>
+            <div className="col-span-full text-center text-gray-400 py-10">
+              Không có giao diện nào trong mục này.
+            </div>
           )}
         </div>
       </div>

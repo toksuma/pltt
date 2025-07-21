@@ -6,6 +6,8 @@ const bcrypt = require("bcrypt");
 
 const SECRET_KEY = "your_secret_key"; 
 
+// API đăng nhập, kiểm tra tài khoản, mật khẩu, trả về JWT token nếu thành công.
+
 router.post("/login", (req, res) => {
   const { username, password } = req.body;
 
@@ -23,6 +25,7 @@ router.post("/login", (req, res) => {
       { expiresIn: "1d" }
     );
 
+    // Log kiểm tra mật khẩu cho debug
     console.log("Mật khẩu người dùng nhập:", password);
     console.log("Mật khẩu trong DB (đã hash):", user.password);
 

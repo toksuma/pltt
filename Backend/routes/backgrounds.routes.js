@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
+// API CRUD Banner Hình Nền, hỗ trợ sắp xếp, chuyển trạng thái active.
+
 // GET: Lấy tất cả backgrounds, sắp xếp theo thứ tự
 router.get("/", (req, res) => {
   db.query(

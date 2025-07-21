@@ -15,10 +15,17 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Trash2, Eye, EyeOff } from "lucide-react";
 import axios from "../axios";
 
-// Sortable Item Component
+/**
+ * Quản lý ảnh nền landing page: thêm, xóa, kích hoạt, kéo thả sắp xếp thứ tự.
+ * - Không dùng icon, chỉ nút text, tối giản UI.
+ * - Comment tổng quan sau import.
+ * - Comment rõ cho từng khối/hàm chính.
+ * - Làm gọn code, không đổi logic.
+ */
+
+// Sortable Item Component: hiển thị từng ảnh nền, nút xóa/kích hoạt, kéo thả
 const SortableItem = ({ id, background, onDelete, onToggleActive }) => {
   const {
     attributes,
@@ -62,18 +69,16 @@ const SortableItem = ({ id, background, onDelete, onToggleActive }) => {
             }`}
             title={background.active ? "Deactivate" : "Activate"}
           >
-            {background.active ? (
-              <Eye className="w-4 h-4" />
-            ) : (
-              <EyeOff className="w-4 h-4" />
-            )}
+            {/* Đổi icon mắt bằng text */}
+            {background.active ? "👁" : "🙈"}
           </button>
           <button
             onClick={() => onDelete(background.id)}
             className="bg-red-500 hover:bg-red-600 text-white p-1 rounded text-xs"
             title="Delete"
           >
-            <Trash2 className="w-4 h-4" />
+            {/* Đổi icon thùng rác bằng text */}
+            Xóa
           </button>
         </div>
         {background.active && (
@@ -94,7 +99,8 @@ const SortableItem = ({ id, background, onDelete, onToggleActive }) => {
           {...listeners}
           className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
         >
-          <GripVertical className="w-5 h-5 text-gray-400" />
+          {/* Đổi icon kéo bằng text */}
+          ≡
         </div>
       </div>
     </div>
@@ -102,28 +108,30 @@ const SortableItem = ({ id, background, onDelete, onToggleActive }) => {
 };
 
 const BackgroundManager = () => {
+  // State lưu danh sách background, trạng thái upload, nhập url, loading, error
   const [backgrounds, setBackgrounds] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [urlInput, setUrlInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Khởi tạo sensors cho kéo thả (chuột & bàn phím)
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
+      activationConstraint: { distance: 8 },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
 
+  // Lấy danh sách background khi load trang
   useEffect(() => {
     fetchBackgrounds();
     // eslint-disable-next-line
   }, []);
 
+  // Lấy backgrounds từ backend
   const fetchBackgrounds = async () => {
     try {
       setLoading(true);
@@ -138,6 +146,7 @@ const BackgroundManager = () => {
     }
   };
 
+  // Thêm background từ URL
   const handleAddUrl = async (e) => {
     e.preventDefault();
     if (!urlInput) return;
@@ -150,34 +159,25 @@ const BackgroundManager = () => {
       });
 
       if (response.data.success) {
-        await fetchBackgrounds(); // Refresh the list
+        await fetchBackgrounds(); // Làm mới danh sách
         setUrlInput("");
       } else {
         setError("Thêm background không thành công.");
       }
     } catch (error) {
       console.error("Error adding background:", error);
-      if (error.response) {
-        // Lỗi phía backend (status code != 2xx)
-        console.error("Backend error:", error.response.data);
-      } else if (error.request) {
-        // Không nhận được phản hồi từ backend
-        console.error("No response from backend");
-      } else {
-        // Lỗi cấu hình request
-        console.error("Axios config error:", error.message);
-      }
       setError("Không thể thêm background");
     } finally {
       setUploading(false);
     }
   };
 
+  // Xóa background
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa ảnh nền này?")) {
       try {
         await axios.delete(`/api/backgrounds/${id}`);
-        await fetchBackgrounds(); // Refresh the list
+        await fetchBackgrounds();
       } catch (error) {
         console.error("Error deleting background:", error);
         setError("Không thể xóa background");
@@ -185,19 +185,20 @@ const BackgroundManager = () => {
     }
   };
 
+  // Bật/tắt trạng thái active
   const handleToggleActive = async (id) => {
     try {
       await axios.put(`/api/backgrounds/${id}/toggle`);
-      await fetchBackgrounds(); // Refresh the list
+      await fetchBackgrounds();
     } catch (error) {
       console.error("Error toggling background:", error);
       setError("Không thể cập nhật trạng thái background");
     }
   };
 
+  // Kéo thả sắp xếp lại thứ tự background
   const handleDragEnd = async (event) => {
     const { active, over } = event;
-
     if (active.id !== over?.id) {
       const oldIndex = backgrounds.findIndex((item) => item.id === active.id);
       const newIndex = backgrounds.findIndex((item) => item.id === over.id);
@@ -212,12 +213,12 @@ const BackgroundManager = () => {
       } catch (error) {
         console.error("Error updating order:", error);
         setError("Không thể cập nhật thứ tự");
-        // Revert on error
         await fetchBackgrounds();
       }
     }
   };
 
+  // Loading hiển thị khi lấy dữ liệu
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto py-10 px-4">
@@ -232,14 +233,13 @@ const BackgroundManager = () => {
   return (
     <div className="max-w-4xl mx-auto py-10 px-4">
       <h2 className="text-2xl font-bold mb-6">Quản lý ảnh nền Landing Page</h2>
-
       {error && (
         <div className="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
           {error}
         </div>
       )}
 
-      {/* Add background from URL */}
+      {/* Form thêm background qua URL */}
       <form className="mb-6 bg-gray-50 p-4 rounded-lg" onSubmit={handleAddUrl}>
         <label className="block mb-2 font-medium text-gray-700">
           Thêm ảnh nền bằng đường dẫn URL:
@@ -264,13 +264,13 @@ const BackgroundManager = () => {
         </div>
       </form>
 
-      {/* Backgrounds list */}
+      {/* Danh sách background, drag/sort được */}
       <div className="mb-4">
         <h3 className="text-lg font-semibold mb-3">
           Danh sách ảnh nền ({backgrounds.length})
         </h3>
         <p className="text-sm text-gray-600 mb-4">
-          Kéo thả để sắp xếp thứ tự hiển thị. Ảnh có biểu tượng mắt sẽ được hiển thị trên trang chủ.
+          Kéo thả để sắp xếp thứ tự hiển thị. Ảnh có biểu tượng 👁 sẽ được hiển thị trên trang chủ.
         </p>
       </div>
 
